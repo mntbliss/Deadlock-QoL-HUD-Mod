@@ -233,6 +233,8 @@ export function flattenPlayerHealthbar(text: string, cfg: HudConfig): string {
     ]),
   );
 
+  text = injectIntoFirstRule(text, ".small_progress_bar", "overflow: noclip;");
+
   text = replaceFirstRuleProps(
     text,
     "#shield_bar,#tech_shield_bar",
@@ -244,7 +246,11 @@ export function flattenPlayerHealthbar(text: string, cfg: HudConfig): string {
     ]),
   );
 
-  return injectIntoFirstRule(text, "#shield_bar,#tech_shield_bar", "vertical-align: top;\n\ty: 28px;");
+  return injectIntoFirstRule(
+    text,
+    "#shield_bar,#tech_shield_bar",
+    `vertical-align: top;\n\ty: ${cfg.get("shield_y", "22px")};\n\toverflow: noclip;`,
+  );
 }
 
 export function flattenMinimap(text: string, cfg: HudConfig): string {
@@ -523,3 +529,32 @@ export function heartOverrideCss(heartCss: string, pulse: boolean, cfg: HudConfi
 }
 `;
 }
+
+export function flattenSwapCorners(text: string): string {
+  text = replaceFirstRuleProps(
+    text,
+    "#minimap_persp",
+    props([["horizontal-align: right;", "horizontal-align: left;"]]),
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".ModsContainer",
+    props([
+      ["horizontal-align: left;", "horizontal-align: right;"],
+      ["margin-left: 16px;", "margin-left: 0px;\n\tmargin-right: 16px;"],
+    ]),
+  );
+
+  text = injectIntoFirstRule(text, "#LowerLeft", "width: 100%;");
+
+  return replaceFirstRuleProps(
+    text,
+    "#LowerLeft CitadelStatusEffect",
+    props([
+      ["horizontal-align: left;", "horizontal-align: right;"],
+      ["margin-left: 20px;", "margin-left: 0px;\n\tmargin-right: 20px;"],
+    ]),
+  );
+}
+

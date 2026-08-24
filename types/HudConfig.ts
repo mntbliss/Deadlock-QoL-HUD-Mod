@@ -43,6 +43,8 @@ const DEFAULTS: Record<string, string> = {
   number_offset_y: "-32px",
   souls_offset_x: "16px",
   side_offset_y: "8px",
+  shield_gap: "6px",
+  swap_minimap_inventory: "false",
   inventory_slots_opacity_idle: "40%",
   minion_bar_width: "460px",
   minion_bar_height: "42px",
@@ -65,11 +67,13 @@ export const HIDDEN_CONFIG_KEYS = new Set([
   "use_heart_crosshair",
   "use_heart_pulse_low_hp_crosshair",
   "use_clear_inventory",
+  "swap_minimap_inventory",
   "souls_margin_bottom",
   "souls_anchor_x",
   "level_anchor_x",
   "level_margin_bottom",
   "move_level",
+  "shield_y",
 ]);
 
 /** HUD knobs from config.json plus derived souls/level anchors. */
@@ -150,6 +154,10 @@ export class HudConfig {
     this.set("level_anchor_x", `${g4(-(barW / 2 + 34))}px`);
     this.set("level_margin_bottom", `${g4(barCenter - jarVisualCenterFromBottom)}px`);
     this.set("move_level", moveLevel ? "true" : "false");
+
+    // y: 28px sits the 8px shield flush on the HP bar. Larger gap moves it up.
+    const shieldGap = this.css("shield_gap", "6px").asNumber();
+    this.set("shield_y", `${g4(28 - shieldGap)}px`);
   }
 
   inventoryLevelCss(): string {
@@ -187,6 +195,50 @@ export class HudConfig {
 .gShopOpen #ToNextPanel
 {
 	visibility: visible;
+}
+`;
+  }
+
+  swapCornersCss(): string {
+    return `
+#minimap_persp
+{
+	horizontal-align: left;
+}
+
+.ModsContainer
+{
+	horizontal-align: right;
+	margin-left: 0px;
+	margin-right: 16px;
+}
+
+#StatsAndModsContainer #LowerLeft CitadelStatusEffect
+{
+	horizontal-align: right;
+	margin-left: 0px;
+	margin-right: 20px;
+}
+
+.gShopOpen #minimap_persp
+{
+	horizontal-align: right;
+}
+
+.gShopOpen .ModsContainer,
+#StatsAndModsContainer.gShopOpen .ModsContainer
+{
+	horizontal-align: left;
+	margin-left: 16px;
+	margin-right: 0px;
+}
+
+.gShopOpen #StatsAndModsContainer #LowerLeft CitadelStatusEffect,
+#StatsAndModsContainer.gShopOpen #LowerLeft CitadelStatusEffect
+{
+	horizontal-align: left;
+	margin-left: 20px;
+	margin-right: 0px;
 }
 `;
   }

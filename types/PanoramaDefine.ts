@@ -61,6 +61,7 @@ export class PanoramaDefine {
       new PanoramaDefine("HealthbarDamageColor", "damage_color"),
       new PanoramaDefine("HealthbarHealColor", "heal_color"),
       new PanoramaDefine("HealthbarNumberOffsetY", "number_offset_y"),
+      new PanoramaDefine("HealthbarShieldY", "shield_y"),
     ];
   }
 }

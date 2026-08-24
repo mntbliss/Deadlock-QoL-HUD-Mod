@@ -12,6 +12,7 @@ import {
   flattenHeartCrosshair,
   flattenMinimap,
   flattenPlayerHealthbar,
+  flattenSwapCorners,
   flattenUnitHealthbars,
   heartOverrideCss,
   revealPlayerBarNumbers,
@@ -61,6 +62,7 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
   console.log(`  use_heart_crosshair: ${flags.heart}`);
   console.log(`  use_heart_pulse_low_hp_crosshair: ${flags.heartPulse}`);
   console.log(`  use_clear_inventory: ${flags.inventory}`);
+  console.log(`  swap_minimap_inventory: ${flags.swapCorners}`);
   console.log("Config:");
 
   for (const [key, value] of cfg.entries()) {
@@ -111,6 +113,8 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
     }
   }
 
+  if (flags.swapCorners && !styleNames.includes("hud.css")) styleNames.push("hud.css");
+
   for (const name of styleNames) {
     const src = path.join(paths.extract, "styles", name);
 
@@ -144,6 +148,10 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
         text = flattenClearInventory(text, cfg, flags.playerHp);
         text = `${text.trimEnd()}\n\n/* === mntbliss clear inventory === */\n${inventoryOverride}\n`;
       }
+      if (flags.swapCorners) {
+        text = flattenSwapCorners(text);
+        text = `${text.trimEnd()}\n\n/* === mntbliss swap corners === */\n${cfg.swapCornersCss()}\n`;
+      }
     } else if (name.endsWith("element_gun.css")) {
       text = flattenHeartCrosshair(text);
       text = `${text.trimEnd()}\n\n/* === mntbliss heart crosshair === */\n${heartOverride}\n`;
@@ -154,6 +162,10 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
     ) {
       text = flattenClearInventory(text, cfg, flags.playerHp);
       text = `${text.trimEnd()}\n\n/* === mntbliss clear inventory === */\n${inventoryOverride}\n`;
+      if (flags.swapCorners) {
+        text = flattenSwapCorners(text);
+        text = `${text.trimEnd()}\n\n/* === mntbliss swap corners === */\n${cfg.swapCornersCss()}\n`;
+      }
     } else {
       text = flattenPlayerHealthbar(text, cfg);
       text = revealPlayerBarNumbers(text);
