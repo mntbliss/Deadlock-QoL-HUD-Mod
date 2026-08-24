@@ -36,7 +36,7 @@ Drop short muted loops in [`docs/previews/`](docs/previews/) using those filenam
 <video src="docs/previews/minimap.webm" width="320" controls muted loop playsinline></video>
 <video src="docs/previews/heart-crosshair.webm" width="240" controls muted loop playsinline></video>
 
-Fully close Deadlock after every rebuild. A reconnect is not enough.
+> Fully close Deadlock after every rebuild. A reconnect is not enough.
 
 ---
 

@@ -22,13 +22,13 @@
 #mntbliss_hp_souls
 {
 	ignore-parent-flow: true;
-	horizontal-align: center;
+	horizontal-align: left;
 	vertical-align: bottom;
 	flow-children: right;
 	width: fit-children;
 	height: 32px;
 	x: SoulsAnchorX;
-	margin-left: 0px;
+	margin-left: 50%;
 	margin-right: 0px;
 	margin-bottom: SoulsMarginBottom;
 	overflow: noclip;
