@@ -3,6 +3,8 @@
 @define CrosshairColor: #FFFFFF;
 @define ReloadCrosshairColor: #FF5A5A;
 @define LowHpCrosshairColor: #E8A3AD;
+@define RegularHitHeartsColor: #FFFFFF;
+@define HeadshotSpikesColor: #FFFFFF;
 @define HeartSize: 36px;
 
 #mntbliss_heart_crosshair,
@@ -18,6 +20,8 @@
 	overflow: noclip;
 	z-index: 80;
 	wash-color: CrosshairColor;
+	transition-property: wash-color;
+	transition-duration: 0.2s;
 }
 
 #mntbliss_heart_echo
@@ -108,11 +112,167 @@
 	background-color: transparent;
 }
 
+.gun_crosshair,
+#GunGrosshair,
+.crosshair__pip,
+.crosshair__pipborder,
+.crosshair__arc,
 .crosshair__outercircle,
-.crosshair__innercircle
+.crosshair__innercircle,
+.crosshair_center_pip,
+#DotOutline,
+#CenterPip,
+#TopPip,
+#RightPip,
+#BottomPip,
+#LeftPip,
+#TopPipOutline,
+#RightPipOutline,
+#BottomPipOutline,
+#LeftPipOutline,
+#TopPipBlack,
+#RightPipBlack,
+#BottomPipBlack,
+#LeftPipBlack,
+#TopArc,
+#RightArc,
+#BottomArc,
+#LeftArc
 {
-	opacity: 0;
 	visibility: collapse;
+	opacity: 0;
+	width: 0px;
+	height: 0px;
+	background-image: none;
+}
+
+#Dot,
+.ability_element_gun #Dot,
+.crosshair__dot
+{
+	visibility: visible;
+	opacity: 1.0;
+	width: 2px;
+	height: 2px;
+	min-width: 2px;
+	min-height: 2px;
+	max-width: 2px;
+	max-height: 2px;
+	ui-scale: 100%;
+	border-radius: 50%;
+	background-image: none;
+	background-color: white;
+	wash-color: white;
+}
+
+#mntbliss_heart_spikes
+{
+	width: 200px;
+	height: 200px;
+	horizontal-align: center;
+	vertical-align: center;
+	visibility: collapse;
+	opacity: 0;
+	overflow: noclip;
+	z-index: 86;
+	wash-color: HeadshotSpikesColor;
+	img-shadow: 0px 0px 6px 1.2 #000000CC;
+}
+
+#mntbliss_hit_hearts
+{
+	width: 200px;
+	height: 200px;
+	horizontal-align: center;
+	vertical-align: center;
+	visibility: collapse;
+	opacity: 0;
+	overflow: noclip;
+	z-index: 88;
+	wash-color: RegularHitHeartsColor;
+	img-shadow: 0px 0px 6px 1.2 #000000CC;
+}
+
+.show_crit_hit_marker #mntbliss_heart_spikes,
+.show_hit_marker #mntbliss_hit_hearts
+{
+	visibility: visible;
+	opacity: 1;
+	animation-name: mntbliss_rose_hit;
+	animation-duration: 0.4s;
+	animation-timing-function: ease-out;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+}
+
+.show_crit_hit_marker #mntbliss_hit_hearts
+{
+	visibility: collapse;
+	opacity: 0;
+	animation-name: none;
+}
+
+.show_crit_hit_marker #mntbliss_heart_crosshair
+{
+	animation-name: mntbliss_heart_hit;
+	animation-duration: 0.24s;
+	animation-timing-function: ease-out;
+	animation-iteration-count: 1;
+}
+
+.show_hit_marker .hit_marker,
+.show_hit_marker #hit_markers .hit_marker,
+.show_crit_hit_marker .hit_marker,
+.show_crit_hit_marker #hit_markers .hit_marker
+{
+	visibility: collapse;
+	opacity: 0;
+}
+
+.reloading #mntbliss_heart_spikes,
+.reloading #mntbliss_hit_hearts,
+.InHideout #mntbliss_heart_spikes,
+.InHideout #mntbliss_hit_hearts,
+.GameStatePreGame #mntbliss_heart_spikes,
+.GameStatePreGame #mntbliss_hit_hearts
+{
+	visibility: collapse;
+	opacity: 0;
+}
+
+@keyframes 'mntbliss_rose_hit'
+{
+	0%
+	{
+		pre-transform-scale2d: 0.9;
+		opacity: 1;
+	}
+	16%
+	{
+		pre-transform-scale2d: 1.18;
+		opacity: 1;
+	}
+	100%
+	{
+		pre-transform-scale2d: 1.7;
+		opacity: 0;
+	}
+}
+
+@keyframes 'mntbliss_heart_hit'
+{
+	0%
+	{
+		pre-transform-scale2d: 1.0;
+	}
+	35%
+	{
+		pre-transform-scale2d: 1.16;
+	}
+	100%
+	{
+		pre-transform-scale2d: 1.0;
+	}
 }
 
 #LowHealthWarning Label

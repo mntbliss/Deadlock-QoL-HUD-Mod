@@ -13,6 +13,8 @@
   "crosshair_color": "#FFFFFF",
   "reload_crosshair_color": "#FF5A5A",
   "low_hp_crosshair_color": "#E8A3AD",
+  "regular_hit_hearts_color": "#FFFFFF",
+  "headshot_spikes_color": "#FFFFFF",
   "heart_size": "36px",
 
   "fill_color": "#e2ffde",
@@ -33,7 +35,7 @@
   "number_size": "28px",
   "number_offset_y": "-30px",
   "souls_offset_x": "20px",
-  "level_offset_x": "32px",
+  "level_offset_x": "20px",
   "side_offset_y": "20px",
   "shield_gap": "4px",
   "inventory_slots_opacity_idle": "40%",

@@ -52,31 +52,48 @@ export function injectUnsecuredSoulsChip(text: string): string {
 }
 
 export function injectHeartsIntoGun(text: string): string {
-  if (text.includes('id="mntbliss_heart_crosshair"') && text.includes('id="mntbliss_heart_cracked"')) {
-    return text;
-  }
-
   const needle = '<Citadel_AbilityHUDElement_Gun class="ability_element_gun">';
 
   if (!text.includes(needle)) {
     BuildError.fail("element_gun.xml is missing Citadel_AbilityHUDElement_Gun");
   }
 
-  const hearts = `${needle}
-		<Image id="mntbliss_heart_echo" src="s2r://panorama/images/heart_crosshair.vsvg" />
-		<Image id="mntbliss_heart_crosshair" src="s2r://panorama/images/heart_crosshair.vsvg" />
-		<Image id="mntbliss_heart_cracked" src="s2r://panorama/images/heart_crosshair_cracked.vsvg" />`;
-
-  if (text.includes('id="mntbliss_heart_cracked"')) {
-    return text.replace(
+  if (!text.includes('id="mntbliss_heart_crosshair"')) {
+    text = text.replace(
       needle,
       `${needle}
 		<Image id="mntbliss_heart_echo" src="s2r://panorama/images/heart_crosshair.vsvg" />
-		<Image id="mntbliss_heart_crosshair" src="s2r://panorama/images/heart_crosshair.vsvg" />`,
+		<Image id="mntbliss_heart_crosshair" src="s2r://panorama/images/heart_crosshair.vsvg" />
+		<Image id="mntbliss_heart_cracked" src="s2r://panorama/images/heart_crosshair_cracked.vsvg" />
+		<Image id="mntbliss_heart_spikes" src="s2r://panorama/images/heart_rose_spikes.vsvg" />
+		<Image id="mntbliss_hit_hearts" src="s2r://panorama/images/heart_hit_hearts.vsvg" />`,
+    );
+  } else if (!text.includes('id="mntbliss_heart_cracked"')) {
+    text = text.replace(
+      '<Image id="mntbliss_heart_crosshair" src="s2r://panorama/images/heart_crosshair.vsvg" />',
+      '<Image id="mntbliss_heart_crosshair" src="s2r://panorama/images/heart_crosshair.vsvg" />\n\t\t<Image id="mntbliss_heart_cracked" src="s2r://panorama/images/heart_crosshair_cracked.vsvg" />',
     );
   }
 
-  return text.replace(needle, hearts);
+  if (!text.includes('id="mntbliss_heart_spikes"')) {
+    const cracked = '<Image id="mntbliss_heart_cracked" src="s2r://panorama/images/heart_crosshair_cracked.vsvg" />';
+    const heart = '<Image id="mntbliss_heart_crosshair" src="s2r://panorama/images/heart_crosshair.vsvg" />';
+    const spikes =
+      '\n\t\t<Image id="mntbliss_heart_spikes" src="s2r://panorama/images/heart_rose_spikes.vsvg" />';
+
+    if (text.includes(cracked)) text = text.replace(cracked, `${cracked}${spikes}`);
+    else if (text.includes(heart)) text = text.replace(heart, `${heart}${spikes}`);
+  }
+
+  if (!text.includes('id="mntbliss_hit_hearts"')) {
+    const spikes = '<Image id="mntbliss_heart_spikes" src="s2r://panorama/images/heart_rose_spikes.vsvg" />';
+    const hitHearts =
+      '\n\t\t<Image id="mntbliss_hit_hearts" src="s2r://panorama/images/heart_hit_hearts.vsvg" />';
+
+    if (text.includes(spikes)) text = text.replace(spikes, `${spikes}${hitHearts}`);
+  }
+
+  return text;
 }
 
 export function injectHeartIntoHud(text: string): string {

@@ -36,6 +36,8 @@ export class PanoramaDefine {
       new PanoramaDefine("CrosshairColor", "crosshair_color"),
       new PanoramaDefine("ReloadCrosshairColor", "reload_crosshair_color"),
       new PanoramaDefine("LowHpCrosshairColor", "low_hp_crosshair_color"),
+      new PanoramaDefine("RegularHitHeartsColor", "regular_hit_hearts_color"),
+      new PanoramaDefine("HeadshotSpikesColor", "headshot_spikes_color"),
       new PanoramaDefine("HeartSize", "heart_size"),
       new PanoramaDefine("InventorySlotsOpacityIdle", "inventory_slots_opacity_idle"),
       new PanoramaDefine("SoulsAnchorX", "souls_anchor_x"),

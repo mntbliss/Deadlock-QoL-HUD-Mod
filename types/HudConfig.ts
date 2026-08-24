@@ -9,7 +9,7 @@ const ALIASES: Record<string, string> = {
   relload_crosshair_color: "reload_crosshair_color",
 };
 
-const STALE = ["minion_bar_scale", "level_hp_margin", "level_offset_y", "souls_offset_y"];
+const STALE = ["minion_bar_scale", "level_hp_margin", "level_offset_y", "souls_offset_y", "headshot_color"];
 
 const DEFAULTS: Record<string, string> = {
   author: "mntbliss",
@@ -23,6 +23,8 @@ const DEFAULTS: Record<string, string> = {
   crosshair_color: "#FFFFFF",
   reload_crosshair_color: "#FF5A5A",
   low_hp_crosshair_color: "#E8A3AD",
+  regular_hit_hearts_color: "#FFFFFF",
+  headshot_spikes_color: "#FFFFFF",
   heart_size: "36px",
   fill_color: "#4DFFB5",
   fill_low_color: "#FF5A5A",

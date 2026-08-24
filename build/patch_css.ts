@@ -419,6 +419,29 @@ export function flattenHeartCrosshair(text: string): string {
 
   text = replaceFirstRuleProps(
     text,
+    ".gun_crosshair",
+    props([["opacity: 0.99;", "opacity: 0;"]]),
+  );
+
+  text = injectIntoFirstRule(text, ".gun_crosshair", "visibility: collapse;\n\twidth: 0px;\n\theight: 0px;");
+
+  text = injectIntoFirstRule(text, ".crosshair__pip", "visibility: collapse;\n\topacity: 0;\n\tbackground-image: none;");
+  text = injectIntoFirstRule(text, ".crosshair__arc", "visibility: collapse;\n\topacity: 0;");
+  text = injectIntoFirstRule(text, ".crosshair__pipborder", "visibility: collapse;\n\topacity: 0;");
+
+  text = replaceFirstRuleProps(
+    text,
+    ".show_crit_hit_marker .hit_marker",
+    props([
+      ["background-color: yellow;", "background-color: #00000000;"],
+      ["box-shadow: 0px 0px 10px red;", "box-shadow: none;"],
+    ]),
+  );
+
+  text = injectIntoFirstRule(text, ".show_crit_hit_marker .hit_marker", "visibility: collapse;\n\topacity: 0;");
+
+  text = replaceFirstRuleProps(
+    text,
     "#LowHealthWarning",
     props([
       ["background-color: #D23619;", "background-color: #00000000;"],

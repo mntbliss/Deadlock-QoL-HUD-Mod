@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <g stroke="none">
+    <g transform="rotate(45 100 100)">
+      <g transform="translate(100 72) scale(0.6) translate(-16 -16)">
+        <path fill="#FFFFFF" d="M16 26.5C16 26.5 5 18.8 5 12.2C5 8.4 8 6 11.2 6C13.3 6 14.9 7.1 16 8.8C17.1 7.1 18.7 6 20.8 6C24 6 27 8.4 27 12.2C27 18.8 16 26.5 16 26.5Z" />
+      </g>
+    </g>
+    <g transform="rotate(135 100 100)">
+      <g transform="translate(100 72) scale(0.6) translate(-16 -16)">
+        <path fill="#FFFFFF" d="M16 26.5C16 26.5 5 18.8 5 12.2C5 8.4 8 6 11.2 6C13.3 6 14.9 7.1 16 8.8C17.1 7.1 18.7 6 20.8 6C24 6 27 8.4 27 12.2C27 18.8 16 26.5 16 26.5Z" />
+      </g>
+    </g>
+    <g transform="rotate(225 100 100)">
+      <g transform="translate(100 72) scale(0.6) translate(-16 -16)">
+        <path fill="#FFFFFF" d="M16 26.5C16 26.5 5 18.8 5 12.2C5 8.4 8 6 11.2 6C13.3 6 14.9 7.1 16 8.8C17.1 7.1 18.7 6 20.8 6C24 6 27 8.4 27 12.2C27 18.8 16 26.5 16 26.5Z" />
+      </g>
+    </g>
+    <g transform="rotate(315 100 100)">
+      <g transform="translate(100 72) scale(0.6) translate(-16 -16)">
+        <path fill="#FFFFFF" d="M16 26.5C16 26.5 5 18.8 5 12.2C5 8.4 8 6 11.2 6C13.3 6 14.9 7.1 16 8.8C17.1 7.1 18.7 6 20.8 6C24 6 27 8.4 27 12.2C27 18.8 16 26.5 16 26.5Z" />
+      </g>
+    </g>
+  </g>
+</svg>
