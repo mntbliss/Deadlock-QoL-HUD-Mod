@@ -8,7 +8,17 @@ echo.
 
 where bun >nul 2>&1
 if errorlevel 1 (
+    if exist "%~dp0compiled\pak01_dir.vpk" (
+        echo Bun not found. Installing the prebuilt pack from compiled\
+        powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch_mod.ps1" -Action enable
+        if errorlevel 1 goto :end
+        echo.
+        echo  Mod is ON. Fully close Deadlock, then launch again.
+        echo.
+        goto :end
+    )
     echo Install Bun from https://bun.sh then run this again.
+    echo Or use install_compiled.bat if compiled\pak01_dir.vpk is already in this folder.
     goto :end
 )
 

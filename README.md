@@ -2,7 +2,9 @@
 
 A file-based Deadlock HUD addon. No injection. You edit CSS / `config.json`, this repo compiles them into Valve Panorama (`.vcss_c`, `.vxml_c`) and packs `game/citadel/addons/pak01_dir.vpk`.
 
-**Install:** install [Bun](https://bun.sh), put Reduced CSDK 12 on disk, clone this repo, then double-click [`enable_mod.bat`](enable_mod.bat). If Deadlock or the CSDK is not found, set the paths in [`paths.json`](paths.json).
+**Install:** clone this repo next to Deadlock’s `game/` folder (tip below), then double-click [`install_compiled.bat`](install_compiled.bat). That uses the prebuilt pack in [`compiled/`](compiled/). No Bun, no CSDK.
+
+**Rebuild / edit `config.json`:** install [Bun](https://bun.sh) and Reduced CSDK 12, then [`enable_mod.bat`](enable_mod.bat). If Deadlock or the CSDK is not found, set the paths in [`paths.json`](paths.json).
 
 > [!TIP]
 > Clone into your Deadlock install (`steamapps/common/Deadlock`, next to `game/`) so the script finds the game automatically:
@@ -124,7 +126,8 @@ Deadlock never loads raw `.css`.
 
 Same file runs `CSDKCfgVPK.exe` and writes:
 
-`Deadlock/game/citadel/addons/pak01_dir.vpk`
+- `Deadlock/game/citadel/addons/pak01_dir.vpk`
+- [`compiled/pak01_dir.vpk`](compiled/pak01_dir.vpk) (what [`install_compiled.bat`](install_compiled.bat) installs)
 
 ### Turning the mod on in the game
 
@@ -137,22 +140,30 @@ Same file runs `CSDKCfgVPK.exe` and writes:
 
 ## Launch
 
-Needs **Bun** and **Reduced CSDK 12**. Easiest path: clone next to `game/` inside `steamapps/common/Deadlock` (see the tip at the top).
+**Play the prebuilt pack** (no Bun, no CSDK):
 
 ```bat
 cd steamapps\common\Deadlock
 git clone <this-repo-url> mntbliss_QoL_mod
 cd mntbliss_QoL_mod
+install_compiled.bat
+```
+
+**Rebuild** after changing [`config.json`](config.json) or CSS. Needs **Bun** and **Reduced CSDK 12**:
+
+```bat
 enable_mod.bat
 ```
 
 If the build cannot find Deadlock or the CSDK, set those two fields in [`paths.json`](paths.json). Empty strings mean “keep looking automatically.”
 
-Or from a terminal (or VSCode/code editor):
+Or from a terminal:
 
 ```bat
 bun install
 bun run build
 ```
+
+Each rebuild overwrites [`compiled/pak01_dir.vpk`](compiled/pak01_dir.vpk) and `game/citadel/addons/pak01_dir.vpk`.
 
 Disable with [`disable_mod.bat`](disable_mod.bat). After a game patch, re-decompile those same files into [`assets/panorama/`](assets/panorama/) and [`assets/scripts/`](assets/scripts/) before rebuilding.

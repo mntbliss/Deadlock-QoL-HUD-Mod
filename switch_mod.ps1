@@ -125,9 +125,17 @@ if ($Action -eq "enable") {
         Write-Host "addons path already present in gameinfo.gi"
     }
 
+    New-Item $addons -ItemType Directory -Force | Out-Null
+
+    $compiled = Join-Path $PSScriptRoot "compiled\pak01_dir.vpk"
+    if (Test-Path $compiled) {
+        Copy-Item $compiled $vpk -Force
+        Write-Host "Installed compiled\pak01_dir.vpk"
+    }
+
     if (Test-Path $vpkOff) {
-        if (Test-Path $vpk) { Remove-Item $vpk -Force }
-        Rename-Item $vpkOff "pak01_dir.vpk"
+        if (Test-Path $vpk) { Remove-Item $vpkOff -Force }
+        else { Rename-Item $vpkOff "pak01_dir.vpk" }
     }
 
     if (-not (Test-Path $vpk)) {

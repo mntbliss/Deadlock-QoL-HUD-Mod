@@ -54,19 +54,32 @@ export function packVpk(paths: ProjectPaths): void {
   if (proc.status !== 0) BuildError.fail(`CSDKCfgVPK failed with code ${proc.status}`);
   if (!fs.existsSync(stagedPath)) BuildError.fail("VPK was not created");
 
+  copyShareableVpk(paths, stagedPath);
+
   try {
     if (fs.existsSync(paths.outVpk)) fs.unlinkSync(paths.outVpk);
 
     fs.renameSync(stagedPath, paths.outVpk);
     console.log(`OK: ${paths.outVpk} (${fs.statSync(paths.outVpk).size} bytes)`);
   } catch (err) {
-    if (err && typeof err === "object" && "code" in err && err.code === "EPERM") {
+    const code = err && typeof err === "object" && "code" in err ? String(err.code) : "";
+
+    if (code === "EPERM" || code === "EBUSY") {
       console.log(`Game is locking ${path.basename(paths.outVpk)}.`);
-      console.log(`Built pack is ready at: ${stagedPath}`);
-      console.log("Fully close Deadlock, then run enable_mod.bat again (or rename .vpk.new -> pak01_dir.vpk).");
+      console.log(`Shareable pack is in compiled\\pak01_dir.vpk`);
+      console.log("Fully close Deadlock, then run enable_mod.bat or install_compiled.bat.");
       process.exit(2);
     }
 
     throw err;
   }
+}
+
+function copyShareableVpk(paths: ProjectPaths, from: string): void {
+  const destDir = path.join(paths.root, "compiled");
+  const dest = path.join(destDir, "pak01_dir.vpk");
+
+  fs.mkdirSync(destDir, { recursive: true });
+  fs.copyFileSync(from, dest);
+  console.log(`Shareable copy: ${dest} (${fs.statSync(dest).size} bytes)`);
 }
