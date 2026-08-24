@@ -149,8 +149,8 @@ Same file runs `CSDKCfgVPK.exe` and writes:
 
 ```bat
 cd steamapps\common\Deadlock
-git clone <this-repo-url> mntbliss_QoL_mod
-cd mntbliss_QoL_mod
+git clone https://github.com/mntbliss/Deadlock-QoL-HUD-Mod.git
+cd Deadlock-QoL-HUD-Mod
 install_compiled.bat
 ```
 
