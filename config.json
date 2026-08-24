@@ -1,0 +1,48 @@
+{
+  "author": "mntbliss",
+  "mod_name": "mntbliss QoL HUD",
+
+  "use_character_hp_bar": true,
+  "use_minion_panorama_bars": true,
+  "use_minimap_style": true,
+  "use_heart_crosshair": true,
+  "use_heart_pulse_low_hp_crosshair": true,
+  "use_clear_inventory": true,
+
+  "crosshair_color": "#FFFFFF",
+  "reload_crosshair_color": "#FF5A5A",
+  "low_hp_crosshair_color": "#E8A3AD",
+  "heart_size": "36px",
+
+  "fill_color": "#e2ffde",
+  "fill_low_color": "#FF5A5A",
+  "fill_mid_color": "#E8FF5A",
+  "track_color": "#0A0A0A99",
+  "border_color": "#000000",
+  "bar_shadow": "0px 0px 6px 1px #000000F0",
+  "damage_color": "#B83A32CC",
+  "heal_color": "#77DB77CC",
+  "number_color": "#FFEFD7",
+  "max_number_color": "#FFEFD799",
+  "bar_width": "440px",
+  "bar_height": "22px",
+  "border_radius": "12px",
+  "border_width": "1px",
+  "margin_bottom": "120px",
+  "number_size": "28px",
+  "number_offset_y": "-32px",
+  "souls_offset_x": "60px",
+  "inventory_slots_opacity_idle": "40%",
+
+  "minion_bar_width": "460px",
+  "minion_bar_height": "40px",
+  "minion_ui_scale": "300%",
+  "minion_border_radius": "10px",
+  "minion_border_width": "2px",
+  "minion_border_color": "#FFFFFF88",
+  "minion_track_color": "#000000CC",
+
+  "minimap_border_radius": "32px",
+  "minimap_bg_color": "#0000004D",
+  "minimap_scale": "100%"
+}

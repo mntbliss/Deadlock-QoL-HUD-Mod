@@ -1,0 +1,514 @@
+/* Stylish bottom-center HP bar. @defines overwritten from config.json at build. */
+
+@define HealthbarWidth: 440px;
+@define HealthbarMinWidth: 440px;
+@define HealthbarHeight: 22px;
+@define HealthbarMinHeight: 22px;
+@define HealthbarStackOffX: 0px;
+@define HealthbarStackOffY: 0px;
+@define HealthbarStackAngle: 0.0;
+@define HealthbarMarginBottom: 118px;
+@define HealthbarNumberSize: 28px;
+@define HealthbarNumberColor: #FFEFD7;
+@define HealthbarMaxNumberColor: #FFEFD799;
+@define HealthbarBorderWidth: 1px;
+@define HealthbarBorderColor: #000000;
+@define HealthbarBorderRadius: 12px;
+@define HealthbarTrackColor: #0A0A0A99;
+@define HealthbarBarShadow: 0px 0px 6px 1px #000000F0;
+@define HealthbarFillColor: #4DFFB5;
+@define HealthbarFillMidColor: #E8FF5A;
+@define HealthbarFillLowColor: #FF5A5A;
+@define HealthbarDamageColor: #B83A32CC;
+@define HealthbarHealColor: #77DB77CC;
+@define HealthbarNumberOffsetY: -32px;
+
+#health_and_abilities_container
+{
+	width: 560px;
+	height: 168px;
+	vertical-align: bottom;
+	horizontal-align: center;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-bottom: HealthbarMarginBottom;
+	ui-scale: 100%;
+	flow-children: none;
+	overflow: noclip;
+}
+
+.AspectRatio21x9 #health_and_abilities_container,
+.AspectRatio16x10 #health_and_abilities_container
+{
+	horizontal-align: center;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+#HealthBarContent
+{
+	flow-children: down;
+	height: 100%;
+	width: 100%;
+	overflow: noclip;
+}
+
+#hud_health_bars
+{
+	visibility: visible;
+	width: 100%;
+	height: fit-children;
+	horizontal-align: center;
+	overflow: noclip;
+}
+
+#hud_health_bars_stacked
+{
+	visibility: collapse;
+}
+
+.view_is_in_eye.player_selected #hud_health_bars
+{
+	visibility: visible;
+}
+
+.bars_container
+{
+	transform: none;
+	horizontal-align: center;
+	vertical-align: center;
+	width: fit-children;
+	height: fit-children;
+	max-height: 110px;
+	margin-top: 54px;
+	margin-right: 0px;
+	padding: 10px 12px;
+	flow-children: down;
+	overflow: noclip;
+}
+
+.health_bar_line,
+.healthLow .health_bar_line,
+.healthMid .health_bar_line
+{
+	horizontal-align: center;
+	vertical-align: center;
+	height: fit-children;
+	width: HealthbarWidth;
+	overflow: noclip;
+	flow-children: down;
+	animation-name: none;
+	pre-transform-scale2d: 1.0;
+}
+
+.hp_numbers_row
+{
+	width: 100%;
+	height: 32px;
+	horizontal-align: center;
+	flow-children: right;
+	overflow: noclip;
+	z-index: 200;
+	margin-bottom: 4px;
+}
+
+.hp_numbers_row #current_health,
+.hp_numbers_row .progress_bar_current
+{
+	font-family: numericOracle;
+	font-size: HealthbarNumberSize;
+	font-weight: bold;
+	color: HealthbarNumberColor;
+	text-shadow: 0px 0px 4px 3.0 #000000EE;
+	vertical-align: center;
+	visibility: visible;
+	opacity: 1;
+}
+
+.hp_numbers_row #max_health
+{
+	font-family: numericSans;
+	font-size: 16px;
+	color: HealthbarMaxNumberColor;
+	margin-left: 4px;
+	margin-top: 4px;
+	vertical-align: center;
+	visibility: visible;
+	opacity: 1;
+}
+
+.health_bar_border
+{
+	margin: 0px;
+	width: HealthbarWidth;
+	height: HealthbarHeight;
+	vertical-align: center;
+	horizontal-align: center;
+	border: HealthbarBorderWidth solid HealthbarBorderColor;
+	border-radius: HealthbarBorderRadius;
+	background-color: HealthbarTrackColor;
+	padding: 0px;
+	overflow: noclip;
+	world-blur: ingameHudBlur;
+	box-shadow: HealthbarBarShadow;
+	brightness: 1;
+}
+
+.health_bar_border #health_bar,
+#health_bar,
+.large_progress_bar
+{
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	border-radius: HealthbarBorderRadius;
+	overflow: clip;
+	box-shadow: none;
+	brightness: 1;
+}
+
+#health_bar,
+#pending_healing,
+#pending_incoming_damage,
+#pending_incoming_heal
+{
+	opacity-mask: url("s2r://panorama/images/masks/no_mask_png.vtex");
+	background-color: transparent;
+	background-image: none;
+	border-radius: HealthbarBorderRadius;
+	margin: 0px;
+	width: 100%;
+	height: 100%;
+	padding: 0px;
+	overflow: clip;
+	box-shadow: none;
+}
+
+#health_bar .ProgressBarLeft,
+.team1 #health_bar .ProgressBarLeft,
+.team2 #health_bar .ProgressBarLeft,
+.team1.friend #health_bar .ProgressBarLeft,
+.team2.friend #health_bar .ProgressBarLeft,
+.healthMid #health_bar .ProgressBarLeft,
+.healthLow #health_bar .ProgressBarLeft,
+.localPlayerMidHealth #health_bar .ProgressBarLeft,
+.localPlayerLowHealth #health_bar .ProgressBarLeft
+{
+	opacity-mask: url("s2r://panorama/images/masks/no_mask_png.vtex");
+	background-image: url("s2r://panorama/images/hp_dot_grid.vsvg");
+	background-size: 7px 7px;
+	background-repeat: repeat;
+	background-position: 0% 50%;
+	background-img-opacity: 0.38;
+	background-color: HealthbarFillColor;
+	border-radius: 0px;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	box-shadow: none;
+	z-index: 5;
+}
+
+.localPlayerMidHealth #health_bar .ProgressBarLeft,
+.healthMid #health_bar .ProgressBarLeft
+{
+	background-color: HealthbarFillMidColor;
+}
+
+.localPlayerLowHealth #health_bar .ProgressBarLeft,
+.healthLow #health_bar .ProgressBarLeft
+{
+	background-color: HealthbarFillLowColor;
+}
+
+#health_bar .ProgressBarMiddle
+{
+	background-image: none;
+	opacity-mask: url("s2r://panorama/images/masks/no_mask_png.vtex");
+	background-color: #00000000;
+	background-img-opacity: 0;
+	border-radius: 0px;
+	height: 100%;
+	vertical-align: center;
+	margin: 0px;
+	padding: 0px;
+	box-shadow: none;
+	z-index: 2;
+	transition-property: background-color, background-img-opacity;
+	transition-duration: 1s;
+}
+
+#health_bar.healthLost .ProgressBarMiddle
+{
+	background-image: url("s2r://panorama/images/hp_square_grid.vsvg");
+	background-size: 7px 7px;
+	background-repeat: repeat;
+	background-position: 0% 50%;
+	background-img-opacity: 0.38;
+	background-color: HealthbarDamageColor;
+	border-radius: 0px;
+	height: 100%;
+	vertical-align: center;
+	margin: 0px;
+	padding: 0px;
+	box-shadow: none;
+	z-index: 2;
+}
+
+#health_bar .ProgressBarRight
+{
+	background-image: none;
+	opacity-mask: url("s2r://panorama/images/masks/no_mask_png.vtex");
+	background-color: transparent;
+	border-radius: 0px;
+	height: 100%;
+	margin: 0px;
+}
+
+#pending_healing,
+#pending_incoming_damage,
+#pending_incoming_heal
+{
+	ignore-parent-flow: true;
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+	overflow: clip;
+	box-shadow: none;
+}
+
+#pending_healing .ProgressBarLeft,
+#pending_healing .ProgressBarRight,
+#pending_incoming_damage .ProgressBarLeft,
+#pending_incoming_damage .ProgressBarRight,
+#pending_incoming_heal .ProgressBarLeft,
+#pending_incoming_heal .ProgressBarRight
+{
+	opacity: 0;
+	background-image: none;
+	opacity-mask: url("s2r://panorama/images/masks/no_mask_png.vtex");
+	border-radius: 0px;
+}
+
+#pending_healing .ProgressBarMiddle,
+#pending_incoming_heal .ProgressBarMiddle,
+#pending_incoming_damage .ProgressBarMiddle
+{
+	opacity-mask: url("s2r://panorama/images/masks/no_mask_png.vtex");
+	background-image: url("s2r://panorama/images/hp_square_grid.vsvg");
+	background-size: 7px 7px;
+	background-repeat: repeat;
+	background-position: 0% 50%;
+	background-img-opacity: 0.38;
+	border-radius: 0px;
+	height: 100%;
+	vertical-align: center;
+	margin: 0px;
+	padding: 0px;
+	box-shadow: none;
+	z-index: 3;
+}
+
+#pending_healing .ProgressBarMiddle,
+#pending_incoming_heal .ProgressBarMiddle
+{
+	background-color: HealthbarHealColor;
+}
+
+#pending_incoming_damage .ProgressBarMiddle
+{
+	background-color: #E87F3DCC;
+}
+
+#health_bar_frame
+{
+	visibility: collapse;
+	opacity: 0;
+	background-image: none;
+	width: 0px;
+	height: 0px;
+	box-shadow: none;
+}
+
+#healthBottomEdge
+{
+	visibility: collapse;
+}
+
+/* HP / max sit ABOVE the bar. Labels must stay inside the ProgressBar
+   or {i:health} goes empty. Parents use overflow: noclip so they are not clipped. */
+#health_bar .progress_bar_numbers,
+.health_bar_border .progress_bar_numbers,
+.progress_bar_numbers
+{
+	visibility: visible;
+	opacity: 1;
+	ignore-parent-flow: true;
+	width: 100%;
+	height: 32px;
+	horizontal-align: center;
+	vertical-align: top;
+	margin-top: HealthbarNumberOffsetY;
+	transform: none;
+	flow-children: none;
+	z-index: 80;
+	overflow: noclip;
+}
+
+.bar_num_col_right,
+.bar_num_col_left
+{
+	width: 100%;
+	height: 32px;
+	horizontal-align: center;
+	vertical-align: center;
+	flow-children: right;
+	overflow: noclip;
+}
+
+#health_bar #current_health,
+#health_bar .progress_bar_current
+{
+	font-family: numericOracle;
+	font-size: HealthbarNumberSize;
+	font-weight: bold;
+	color: HealthbarNumberColor;
+	text-shadow: 0px 0px 4px 3.0 #000000EE;
+	vertical-align: center;
+	horizontal-align: center;
+	padding-left: 0px;
+	margin: 0px;
+	visibility: visible;
+	opacity: 1;
+	overflow: noclip;
+}
+
+#health_bar #max_health
+{
+	font-family: numericSans;
+	font-size: 16px;
+	color: HealthbarMaxNumberColor;
+	margin-left: 4px;
+	margin-right: 0px;
+	margin-top: 4px;
+	vertical-align: center;
+	visibility: visible;
+	opacity: 1;
+	overflow: noclip;
+}
+
+#shield_bar .progress_bar_numbers,
+#tech_shield_bar .progress_bar_numbers
+{
+	visibility: collapse;
+}
+
+#HealthRegenAndTotal
+{
+	width: 100%;
+	height: 36px;
+	horizontal-align: center;
+	vertical-align: top;
+	margin-top: 0px;
+	margin-right: 0px;
+	transform: none;
+	ignore-parent-flow: true;
+	visibility: visible;
+	opacity: 1;
+	flow-children: none;
+	z-index: 70;
+	overflow: noclip;
+}
+
+.healthContainer
+{
+	horizontal-align: center;
+	vertical-align: top;
+	visibility: collapse;
+}
+
+.healthBacker
+{
+	visibility: collapse;
+	opacity: 0;
+	background-image: none;
+}
+
+.currentHealthLabel,
+.totalHealthLabel
+{
+	visibility: collapse;
+}
+
+.healthRegenContainer
+{
+	horizontal-align: center;
+	vertical-align: top;
+	margin-top: 2px;
+	ignore-parent-flow: true;
+	margin-left: 0px;
+	visibility: visible;
+}
+
+.shieldNumbersContainer,
+#RecentHealContainer,
+#RecentDamageContainer,
+.recentHealCounters,
+.recentDamageCounters
+{
+	visibility: collapse;
+	opacity: 0;
+}
+
+CitadelHudShieldsContainer
+{
+	margin-top: 0px;
+	horizontal-align: center;
+	vertical-align: center;
+}
+
+#HealthBarContent #StatusEffects
+{
+	vertical-align: top;
+	horizontal-align: center;
+	margin-top: 4px;
+	margin-right: 0px;
+}
+
+#hud_held
+{
+	margin-right: 0px;
+}
+
+#shield_bar,
+#tech_shield_bar
+{
+	ignore-parent-flow: true;
+	transform: none;
+	margin: 0px;
+	vertical-align: top;
+	horizontal-align: center;
+	y: 28px;
+	z-index: 60;
+	border-radius: 6px;
+	opacity-mask: url("s2r://panorama/images/masks/no_mask_png.vtex");
+	box-shadow: none;
+}
+
+.small_progress_bar
+{
+	width: 180px;
+	height: 8px;
+	margin-top: 0px;
+	horizontal-align: center;
+}
+
+.regen_container
+{
+	horizontal-align: center;
+	padding: 2px 0px 0px 0px;
+	margin-top: 2px;
+	visibility: visible;
+}

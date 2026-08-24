@@ -1,0 +1,13 @@
+{
+  "name": "mntbliss-qol-mod",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "bun main.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.0",
+    "typescript": "^7.0.2"
+  }
+}

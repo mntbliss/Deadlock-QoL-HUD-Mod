@@ -1,0 +1,65 @@
+/* Rounded-square minimap with faded edges and a dark dotted glass back.
+ *
+ * @defines are Panorama variables. compile_with_csdk.py overwrites them from config.json.
+ * The real fade is injected into the *first* vanilla rules (compiled CSS keeps those).
+ */
+
+@define MinimapBorderRadius: 32px;
+@define MinimapBgColor: #0000004D;
+@define MinimapScale: 100%;
+
+#minimap_container
+{
+	border-radius: MinimapBorderRadius;
+	overflow: noclip;
+	opacity-mask: url("s2r://panorama/images/masks/softedge_box_png.vtex");
+	ui-scale: MinimapScale;
+}
+
+#HudMinimapContainer
+{
+	width: 100%;
+	height: 100%;
+	border-radius: MinimapBorderRadius;
+	background-color: gradient( radial, 50% 50%, 0% 0%, 82% 82%, from( MinimapBgColor ), to( #00000000 ) );
+	background-image: url("s2r://panorama/images/minimap_dot_grid.vsvg");
+	background-size: 8px 8px;
+	background-repeat: repeat;
+	background-img-opacity: 0.45;
+	overflow: noclip;
+	world-blur: none;
+	opacity-mask: url("s2r://panorama/images/masks/softedge_box_png.vtex");
+}
+
+#hud_minimap
+{
+	border-radius: MinimapBorderRadius;
+	background-color: #00000000;
+	overflow: noclip;
+	opacity-mask: url("s2r://panorama/images/masks/softedge_box_png.vtex");
+}
+
+#map_render
+{
+	opacity-mask: url("s2r://panorama/images/masks/softedge_box_png.vtex");
+}
+
+#minimap_frame
+{
+	visibility: collapse;
+	opacity: 0;
+	background-image: none;
+}
+
+#minimap_blur
+{
+	border-radius: MinimapBorderRadius;
+	opacity-mask: url("s2r://panorama/images/masks/softedge_box_png.vtex");
+}
+
+.useZoomedMinimap #HudMinimapContainer,
+.useZoomedMinimap #hud_minimap
+{
+	border-radius: MinimapBorderRadius;
+	overflow: noclip;
+}

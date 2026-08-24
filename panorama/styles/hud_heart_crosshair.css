@@ -1,0 +1,127 @@
+/* Minimal heart outline reticle. Values overwritten from config.json. */
+
+@define CrosshairColor: #FFFFFF;
+@define ReloadCrosshairColor: #FF5A5A;
+@define LowHpCrosshairColor: #E8A3AD;
+@define HeartSize: 36px;
+
+#mntbliss_heart_crosshair,
+#mntbliss_heart_cracked,
+#mntbliss_heart_echo
+{
+	width: HeartSize;
+	height: HeartSize;
+	horizontal-align: center;
+	vertical-align: center;
+	opacity: 0.94;
+	img-shadow: 0px 0px 3px 1.0 #000000AA;
+	overflow: noclip;
+	z-index: 80;
+	wash-color: CrosshairColor;
+}
+
+#mntbliss_heart_echo
+{
+	visibility: collapse;
+	opacity: 0;
+	z-index: 70;
+	wash-color: LowHpCrosshairColor;
+}
+
+#mntbliss_heart_cracked
+{
+	visibility: collapse;
+	opacity: 0;
+	z-index: 90;
+	wash-color: ReloadCrosshairColor;
+}
+
+#LowHealthWarning #mntbliss_heart_crosshair,
+#LowHealthWarning #mntbliss_heart_echo
+{
+	visibility: collapse;
+	opacity: 0;
+}
+
+.attack_disabled #mntbliss_heart_crosshair,
+.attack_delayed #mntbliss_heart_crosshair,
+.reloading #mntbliss_heart_crosshair,
+.attack_disabled #mntbliss_heart_echo,
+.attack_delayed #mntbliss_heart_echo,
+.reloading #mntbliss_heart_echo,
+.InHideout #mntbliss_heart_crosshair,
+.InHideout #mntbliss_heart_echo,
+.GameStatePreGame #mntbliss_heart_crosshair,
+.GameStatePreGame #mntbliss_heart_echo
+{
+	visibility: collapse;
+	opacity: 0;
+}
+
+@keyframes 'mntbliss_heart_reload'
+{
+	0%
+	{
+		pre-transform-rotate2d: 0deg;
+		pre-transform-scale2d: 1.0;
+	}
+	25%
+	{
+		pre-transform-rotate2d: 14deg;
+		pre-transform-scale2d: 1.1;
+	}
+	50%
+	{
+		pre-transform-rotate2d: 0deg;
+		pre-transform-scale2d: 0.92;
+	}
+	75%
+	{
+		pre-transform-rotate2d: -14deg;
+		pre-transform-scale2d: 1.1;
+	}
+	100%
+	{
+		pre-transform-rotate2d: 0deg;
+		pre-transform-scale2d: 1.0;
+	}
+}
+
+.reloading #mntbliss_heart_cracked,
+.attack_delayed.reloading #mntbliss_heart_cracked
+{
+	visibility: visible;
+	opacity: 0.96;
+	animation-name: mntbliss_heart_reload;
+	animation-duration: 0.7s;
+	animation-iteration-count: infinite;
+	animation-timing-function: ease-in-out;
+}
+
+.crosshair__dotborder
+{
+	width: 0px;
+	height: 0px;
+	opacity: 0;
+	visibility: collapse;
+	border: 0px solid transparent;
+	background-color: transparent;
+}
+
+.crosshair__outercircle,
+.crosshair__innercircle
+{
+	opacity: 0;
+	visibility: collapse;
+}
+
+#LowHealthWarning Label
+{
+	margin-top: 260px;
+	opacity: 0;
+}
+
+#LowHealthWarning.localPlayerLowHealth Label
+{
+	opacity: 1;
+}
