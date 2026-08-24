@@ -7,6 +7,8 @@
   "use_minimap_style": true,
   "use_heart_crosshair": true,
   "use_heart_pulse_low_hp_crosshair": true,
+  "use_custom_hit_animation": true,
+  "use_custom_hit_headshot_animation": true,
   "use_clear_inventory": true,
   "swap_minimap_inventory": false,
 

@@ -7,6 +7,7 @@
 @define HeadshotSpikesColor: #FFFFFF;
 @define HeartSize: 36px;
 
+/* === mntbliss:heart_reticle === */
 #mntbliss_heart_crosshair,
 #mntbliss_heart_cracked,
 #mntbliss_heart_echo
@@ -165,6 +166,9 @@
 	wash-color: white;
 }
 
+/* === /mntbliss:heart_reticle === */
+
+/* === mntbliss:custom_hit_shared === */
 #mntbliss_heart_spikes
 {
 	width: 200px;
@@ -191,42 +195,6 @@
 	z-index: 88;
 	wash-color: RegularHitHeartsColor;
 	img-shadow: 0px 0px 6px 1.2 #000000CC;
-}
-
-.show_crit_hit_marker #mntbliss_heart_spikes,
-.show_hit_marker #mntbliss_hit_hearts
-{
-	visibility: visible;
-	opacity: 1;
-	animation-name: mntbliss_rose_hit;
-	animation-duration: 0.4s;
-	animation-timing-function: ease-out;
-	animation-iteration-count: 1;
-	animation-fill-mode: forwards;
-}
-
-.show_crit_hit_marker #mntbliss_hit_hearts
-{
-	visibility: collapse;
-	opacity: 0;
-	animation-name: none;
-}
-
-.show_crit_hit_marker #mntbliss_heart_crosshair
-{
-	animation-name: mntbliss_heart_hit;
-	animation-duration: 0.24s;
-	animation-timing-function: ease-out;
-	animation-iteration-count: 1;
-}
-
-.show_hit_marker .hit_marker,
-.show_hit_marker #hit_markers .hit_marker,
-.show_crit_hit_marker .hit_marker,
-.show_crit_hit_marker #hit_markers .hit_marker
-{
-	visibility: collapse;
-	opacity: 0;
 }
 
 .reloading #mntbliss_heart_spikes,
@@ -258,6 +226,68 @@
 		opacity: 0;
 	}
 }
+/* === /mntbliss:custom_hit_shared === */
+
+/* === mntbliss:custom_hit === */
+.show_hit_marker #mntbliss_hit_hearts
+{
+	visibility: visible;
+	opacity: 1;
+	animation-name: mntbliss_rose_hit;
+	animation-duration: 0.4s;
+	animation-timing-function: ease-out;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+}
+
+.show_hit_marker .hit_marker,
+.show_hit_marker #hit_markers .hit_marker
+{
+	visibility: collapse;
+	opacity: 0;
+}
+
+.show_crit_hit_marker #mntbliss_hit_hearts
+{
+	visibility: collapse;
+	opacity: 0;
+	animation-name: none;
+}
+/* === /mntbliss:custom_hit === */
+
+/* === mntbliss:custom_headshot === */
+.show_crit_hit_marker #mntbliss_heart_spikes
+{
+	visibility: visible;
+	opacity: 1;
+	animation-name: mntbliss_rose_hit;
+	animation-duration: 0.4s;
+	animation-timing-function: ease-out;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+}
+
+.show_crit_hit_marker #mntbliss_hit_hearts
+{
+	visibility: collapse;
+	opacity: 0;
+	animation-name: none;
+}
+
+.show_crit_hit_marker #mntbliss_heart_crosshair
+{
+	animation-name: mntbliss_heart_hit;
+	animation-duration: 0.24s;
+	animation-timing-function: ease-out;
+	animation-iteration-count: 1;
+}
+
+.show_crit_hit_marker .hit_marker,
+.show_crit_hit_marker #hit_markers .hit_marker
+{
+	visibility: collapse;
+	opacity: 0;
+}
 
 @keyframes 'mntbliss_heart_hit'
 {
@@ -274,7 +304,9 @@
 		pre-transform-scale2d: 1.0;
 	}
 }
+/* === /mntbliss:custom_headshot === */
 
+/* === mntbliss:heart_reticle === */
 #LowHealthWarning Label
 {
 	margin-top: 260px;
@@ -285,3 +317,4 @@
 {
 	opacity: 1;
 }
+/* === /mntbliss:heart_reticle === */

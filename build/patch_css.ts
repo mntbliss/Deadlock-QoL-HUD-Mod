@@ -403,7 +403,7 @@ export function flattenClearInventory(text: string, cfg: HudConfig, moveLevel: b
   );
 }
 
-export function flattenHeartCrosshair(text: string): string {
+export function flattenHeartCrosshair(text: string, hideVanillaCrit = true): string {
   text = replaceFirstRuleProps(
     text,
     ".crosshair__dotborder",
@@ -429,16 +429,18 @@ export function flattenHeartCrosshair(text: string): string {
   text = injectIntoFirstRule(text, ".crosshair__arc", "visibility: collapse;\n\topacity: 0;");
   text = injectIntoFirstRule(text, ".crosshair__pipborder", "visibility: collapse;\n\topacity: 0;");
 
-  text = replaceFirstRuleProps(
-    text,
-    ".show_crit_hit_marker .hit_marker",
-    props([
-      ["background-color: yellow;", "background-color: #00000000;"],
-      ["box-shadow: 0px 0px 10px red;", "box-shadow: none;"],
-    ]),
-  );
+  if (hideVanillaCrit) {
+    text = replaceFirstRuleProps(
+      text,
+      ".show_crit_hit_marker .hit_marker",
+      props([
+        ["background-color: yellow;", "background-color: #00000000;"],
+        ["box-shadow: 0px 0px 10px red;", "box-shadow: none;"],
+      ]),
+    );
 
-  text = injectIntoFirstRule(text, ".show_crit_hit_marker .hit_marker", "visibility: collapse;\n\topacity: 0;");
+    text = injectIntoFirstRule(text, ".show_crit_hit_marker .hit_marker", "visibility: collapse;\n\topacity: 0;");
+  }
 
   text = replaceFirstRuleProps(
     text,
@@ -459,8 +461,26 @@ export function flattenHeartCrosshair(text: string): string {
   return injectIntoFirstRule(text, "#LowHealthWarning Label", "opacity: 0;\n\tmargin-top: 260px;");
 }
 
-export function heartOverrideCss(heartCss: string, pulse: boolean, cfg: HudConfig): string {
-  const text = renderTemplate(heartCss, cfg);
+function stripMarkedCss(text: string, name: string): string {
+  return text.replace(
+    new RegExp(`\\/\\* === mntbliss:${name} === \\*\\/[\\s\\S]*?\\/\\* === \\/mntbliss:${name} === \\*\\/\\s*`, "g"),
+    "",
+  );
+}
+
+export function heartOverrideCss(
+  heartCss: string,
+  pulse: boolean,
+  cfg: HudConfig,
+  opts: { heart: boolean; customHit: boolean; customHeadshot: boolean },
+): string {
+  let text = renderTemplate(heartCss, cfg);
+
+  if (!opts.heart) text = stripMarkedCss(text, "heart_reticle");
+  if (!opts.customHit) text = stripMarkedCss(text, "custom_hit");
+  if (!opts.customHeadshot) text = stripMarkedCss(text, "custom_headshot");
+  if (!opts.customHit && !opts.customHeadshot) text = stripMarkedCss(text, "custom_hit_shared");
+
   if (!pulse) return text;
   return `${text}
 @keyframes 'mntbliss_heart_beat'

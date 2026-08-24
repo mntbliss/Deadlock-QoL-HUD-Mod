@@ -28,7 +28,7 @@ Toggles live in [`config.json`](config.json). Turn a feature off there if you on
 | Souls / level | Souls glued to the right-middle of the HP bar. Vanilla XP jar on the left. Shop restores the left gold cluster | <img src="docs/previews/hp-bar.gif" alt="" width="200" /> |
 | Minimap | Rounded square, faded edges, dotted glass back | <img src="docs/previews/minimap.gif" alt="" width="200" /> |
 | Dota Corners | `swap_minimap_inventory`: minimap left, items right (Dota home). Shop (`B`) still uses vanilla left | <img src="docs/previews/minimap.gif" alt="" width="200" /> |
-| Crosshair | Heart outline. Pulses on low HP, cracks while reloading | <img src="docs/previews/heart-crosshair.gif" alt="" width="200" /> |
+| Crosshair | Heart outline. Pulses on low HP, cracks while reloading. Hit markers: `use_custom_hit_animation` / `use_custom_hit_headshot_animation` | <img src="docs/previews/heart-crosshair.gif" alt="" width="200" /> |
 | Minions | Chunky top-center bars for troopers. Heroes keep vanilla dotted pips | <img src="docs/previews/minion-bars.gif" alt="" width="200" /> |
 | Inventory | Idle dotted slots, sliders hidden. Shop (`B`) puts vanilla layout back | <img src="docs/previews/inventory.gif" alt="" width="200" /> |
 

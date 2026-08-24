@@ -61,6 +61,8 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
   console.log(`  use_minimap_style: ${flags.minimap}`);
   console.log(`  use_heart_crosshair: ${flags.heart}`);
   console.log(`  use_heart_pulse_low_hp_crosshair: ${flags.heartPulse}`);
+  console.log(`  use_custom_hit_animation: ${flags.customHit}`);
+  console.log(`  use_custom_hit_headshot_animation: ${flags.customHeadshot}`);
   console.log(`  use_clear_inventory: ${flags.inventory}`);
   console.log(`  swap_minimap_inventory: ${flags.swapCorners}`);
   console.log("Config:");
@@ -76,7 +78,13 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
   const playerOverride = flags.playerHp ? renderTemplate(paths.playerCss, cfg) : "";
   const unitOverride = flags.minions ? renderTemplate(paths.unitCss, cfg) : "";
   const minimapOverride = flags.minimap ? renderTemplate(paths.minimapCss, cfg) : "";
-  const heartOverride = flags.heart ? heartOverrideCss(paths.heartCss, flags.heartPulse, cfg) : "";
+  const heartOverride = flags.gunHud
+    ? heartOverrideCss(paths.heartCss, flags.heartPulse, cfg, {
+        heart: flags.heart,
+        customHit: flags.customHit,
+        customHeadshot: flags.customHeadshot,
+      })
+    : "";
   let inventoryOverride = "";
 
   if (flags.inventory) {
@@ -96,7 +104,7 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
 
   if (flags.minions) styleNames.push(...UNIT_STYLE_BASES);
 
-  if (flags.heart) {
+  if (flags.gunHud) {
     if (!styleNames.includes("hud.css")) styleNames.push("hud.css");
     styleNames.push("ability_hud_elements/element_gun.css");
   }
@@ -140,8 +148,8 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
         text = flattenMinimap(text, cfg);
         text = `${text.trimEnd()}\n\n/* === mntbliss minimap override === */\n${minimapOverride}\n`;
       }
-      if (flags.heart) {
-        text = flattenHeartCrosshair(text);
+      if (flags.gunHud) {
+        if (flags.heart) text = flattenHeartCrosshair(text, flags.customHeadshot);
         text = `${text.trimEnd()}\n\n/* === mntbliss heart crosshair === */\n${heartOverride}\n`;
       }
       if (flags.inventory) {
@@ -153,7 +161,7 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
         text = `${text.trimEnd()}\n\n/* === mntbliss swap corners === */\n${cfg.swapCornersCss()}\n`;
       }
     } else if (name.endsWith("element_gun.css")) {
-      text = flattenHeartCrosshair(text);
+      if (flags.heart) text = flattenHeartCrosshair(text, flags.customHeadshot);
       text = `${text.trimEnd()}\n\n/* === mntbliss heart crosshair === */\n${heartOverride}\n`;
     } else if (
       name === "hud_gold_and_ap_container.css" ||
@@ -223,32 +231,41 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
     inputs.push(new CompileInput(dest));
   }
 
-  if (flags.heart) {
+  if (flags.gunHud) {
     const gunSrc = path.join(paths.extract, "layout", "ability_hud_elements", "element_gun.xml");
 
     if (!fs.existsSync(gunSrc)) BuildError.fail(`Missing extracted layout: ${gunSrc}`);
 
     const gunDest = path.join(paths.content, "panorama", "layout", "ability_hud_elements", "element_gun.xml");
 
-    writeNl(gunDest, injectHeartsIntoGun(stripViewerNoise(fs.readFileSync(gunSrc, "utf8"))));
+    writeNl(
+      gunDest,
+      injectHeartsIntoGun(stripViewerNoise(fs.readFileSync(gunSrc, "utf8")), {
+        heart: flags.heart,
+        customHit: flags.customHit,
+        customHeadshot: flags.customHeadshot,
+      }),
+    );
     inputs.push(new CompileInput(gunDest));
 
-    const hudSrc = path.join(paths.extract, "layout", "hud.xml");
+    if (flags.heart) {
+      const hudSrc = path.join(paths.extract, "layout", "hud.xml");
 
-    if (!fs.existsSync(hudSrc)) BuildError.fail(`Missing extracted layout: ${hudSrc}`);
+      if (!fs.existsSync(hudSrc)) BuildError.fail(`Missing extracted layout: ${hudSrc}`);
 
-    const hudDest = path.join(paths.content, "panorama", "layout", "hud.xml");
+      const hudDest = path.join(paths.content, "panorama", "layout", "hud.xml");
 
-    writeNl(
-      hudDest,
-      injectHeartIntoHud(injectLowhpListener(stripViewerNoise(fs.readFileSync(hudSrc, "utf8")))),
-    );
-    inputs.push(new CompileInput(hudDest));
+      writeNl(
+        hudDest,
+        injectHeartIntoHud(injectLowhpListener(stripViewerNoise(fs.readFileSync(hudSrc, "utf8")))),
+      );
+      inputs.push(new CompileInput(hudDest));
+    }
   }
 
   prepareNpcUnits(paths, inputs, cfg);
 
-  if (flags.playerHp || flags.minimap || flags.heart || flags.inventory) {
+  if (flags.playerHp || flags.minimap || flags.gunHud || flags.inventory) {
     const images = path.join(paths.root, "panorama", "images");
 
     for (const name of fs.readdirSync(images).filter((n) => n.endsWith(".svg")).sort()) {

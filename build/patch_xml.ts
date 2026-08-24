@@ -51,31 +51,53 @@ export function injectUnsecuredSoulsChip(text: string): string {
   );
 }
 
-export function injectHeartsIntoGun(text: string): string {
+export function injectHeartsIntoGun(
+  text: string,
+  opts: { heart: boolean; customHit: boolean; customHeadshot: boolean } = {
+    heart: true,
+    customHit: true,
+    customHeadshot: true,
+  },
+): string {
   const needle = '<Citadel_AbilityHUDElement_Gun class="ability_element_gun">';
 
   if (!text.includes(needle)) {
     BuildError.fail("element_gun.xml is missing Citadel_AbilityHUDElement_Gun");
   }
 
-  if (!text.includes('id="mntbliss_heart_crosshair"')) {
-    text = text.replace(
-      needle,
-      `${needle}
-		<Image id="mntbliss_heart_echo" src="s2r://panorama/images/heart_crosshair.vsvg" />
-		<Image id="mntbliss_heart_crosshair" src="s2r://panorama/images/heart_crosshair.vsvg" />
-		<Image id="mntbliss_heart_cracked" src="s2r://panorama/images/heart_crosshair_cracked.vsvg" />
-		<Image id="mntbliss_heart_spikes" src="s2r://panorama/images/heart_rose_spikes.vsvg" />
-		<Image id="mntbliss_hit_hearts" src="s2r://panorama/images/heart_hit_hearts.vsvg" />`,
+  const images: string[] = [];
+
+  if (opts.heart) {
+    images.push(
+      '<Image id="mntbliss_heart_echo" src="s2r://panorama/images/heart_crosshair.vsvg" />',
+      '<Image id="mntbliss_heart_crosshair" src="s2r://panorama/images/heart_crosshair.vsvg" />',
+      '<Image id="mntbliss_heart_cracked" src="s2r://panorama/images/heart_crosshair_cracked.vsvg" />',
     );
-  } else if (!text.includes('id="mntbliss_heart_cracked"')) {
+  }
+
+  if (opts.customHeadshot) {
+    images.push('<Image id="mntbliss_heart_spikes" src="s2r://panorama/images/heart_rose_spikes.vsvg" />');
+  }
+
+  if (opts.customHit) {
+    images.push('<Image id="mntbliss_hit_hearts" src="s2r://panorama/images/heart_hit_hearts.vsvg" />');
+  }
+
+  const already =
+    text.includes('id="mntbliss_heart_crosshair"') ||
+    text.includes('id="mntbliss_heart_spikes"') ||
+    text.includes('id="mntbliss_hit_hearts"');
+
+  if (!already && images.length) {
+    text = text.replace(needle, `${needle}\n\t\t${images.join("\n\t\t")}`);
+  } else if (!text.includes('id="mntbliss_heart_cracked"') && opts.heart) {
     text = text.replace(
       '<Image id="mntbliss_heart_crosshair" src="s2r://panorama/images/heart_crosshair.vsvg" />',
       '<Image id="mntbliss_heart_crosshair" src="s2r://panorama/images/heart_crosshair.vsvg" />\n\t\t<Image id="mntbliss_heart_cracked" src="s2r://panorama/images/heart_crosshair_cracked.vsvg" />',
     );
   }
 
-  if (!text.includes('id="mntbliss_heart_spikes"')) {
+  if (opts.customHeadshot && !text.includes('id="mntbliss_heart_spikes"')) {
     const cracked = '<Image id="mntbliss_heart_cracked" src="s2r://panorama/images/heart_crosshair_cracked.vsvg" />';
     const heart = '<Image id="mntbliss_heart_crosshair" src="s2r://panorama/images/heart_crosshair.vsvg" />';
     const spikes =
@@ -83,14 +105,16 @@ export function injectHeartsIntoGun(text: string): string {
 
     if (text.includes(cracked)) text = text.replace(cracked, `${cracked}${spikes}`);
     else if (text.includes(heart)) text = text.replace(heart, `${heart}${spikes}`);
+    else text = text.replace(needle, `${needle}${spikes}`);
   }
 
-  if (!text.includes('id="mntbliss_hit_hearts"')) {
+  if (opts.customHit && !text.includes('id="mntbliss_hit_hearts"')) {
     const spikes = '<Image id="mntbliss_heart_spikes" src="s2r://panorama/images/heart_rose_spikes.vsvg" />';
     const hitHearts =
       '\n\t\t<Image id="mntbliss_hit_hearts" src="s2r://panorama/images/heart_hit_hearts.vsvg" />';
 
     if (text.includes(spikes)) text = text.replace(spikes, `${spikes}${hitHearts}`);
+    else text = text.replace(needle, `${needle}${hitHearts}`);
   }
 
   return text;
