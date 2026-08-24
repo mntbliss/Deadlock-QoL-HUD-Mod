@@ -22,19 +22,14 @@ Toggles live in [`config.json`](config.json). Turn a feature off there if you on
 
 | | Feature | Preview |
 | --- | --- | --- |
-| HP | Bottom-center capsule, numbers above the bar, dotted fill, shields overlaid on top | [hp-bar](docs/previews/hp-bar.webm) |
-| Souls / level | Souls glued to the right-middle of the HP bar. Vanilla XP jar on the left. Shop restores the left gold cluster | [hp-bar](docs/previews/hp-bar.webm) |
-| Minimap | Rounded square, faded edges, dotted glass back | [minimap](docs/previews/minimap.webm) |
-| Dota Corners | `swap_minimap_inventory`: minimap left, items right (Dota home). Shop (`B`) still uses vanilla left | [minimap](docs/previews/minimap.webm) |
-| Crosshair | Heart outline. Pulses on low HP, cracks while reloading | [heart-crosshair](docs/previews/heart-crosshair.webm) |
-| Minions | Chunky top-center bars for troopers. Heroes keep vanilla dotted pips | [minion-bars](docs/previews/minion-bars.webm) |
-| Inventory | Idle dotted slots, sliders hidden. Shop (`B`) puts vanilla layout back | [inventory](docs/previews/inventory.webm) |
+| HP | Bottom-center capsule, numbers above the bar, dotted fill, shields overlaid on top | <img src="docs/previews/hp-bar.gif" alt="" width="200" /> |
+| Souls / level | Souls glued to the right-middle of the HP bar. Vanilla XP jar on the left. Shop restores the left gold cluster | <img src="docs/previews/hp-bar.gif" alt="" width="200" /> |
+| Minimap | Rounded square, faded edges, dotted glass back | <img src="docs/previews/minimap.gif" alt="" width="200" /> |
+| Dota Corners | `swap_minimap_inventory`: minimap left, items right (Dota home). Shop (`B`) still uses vanilla left | <img src="docs/previews/minimap.gif" alt="" width="200" /> |
+| Crosshair | Heart outline. Pulses on low HP, cracks while reloading | <img src="docs/previews/heart-crosshair.gif" alt="" width="200" /> |
+| Minions | Chunky top-center bars for troopers. Heroes keep vanilla dotted pips | <img src="docs/previews/minion-bars.gif" alt="" width="200" /> |
+| Inventory | Idle dotted slots, sliders hidden. Shop (`B`) puts vanilla layout back | <img src="docs/previews/inventory.gif" alt="" width="200" /> |
 
-Drop short muted loops in [`docs/previews/`](docs/previews/) using those filenames (`.webm` or `.gif`). Until then the links above are placeholders.
-
-<video src="docs/previews/hp-bar.webm" width="480" controls muted loop playsinline></video>
-<video src="docs/previews/minimap.webm" width="320" controls muted loop playsinline></video>
-<video src="docs/previews/heart-crosshair.webm" width="240" controls muted loop playsinline></video>
 
 > Fully close Deadlock after every rebuild. A reconnect is not enough.
 
