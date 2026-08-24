@@ -8,7 +8,7 @@
   "use_heart_crosshair": true,
   "use_heart_pulse_low_hp_crosshair": true,
   "use_clear_inventory": true,
-  "swap_minimap_inventory": true,
+  "swap_minimap_inventory": false,
 
   "crosshair_color": "#FFFFFF",
   "reload_crosshair_color": "#FF5A5A",
