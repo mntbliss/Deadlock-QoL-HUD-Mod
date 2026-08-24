@@ -31,7 +31,8 @@
   "margin_bottom": "120px",
   "number_size": "28px",
   "number_offset_y": "-32px",
-  "souls_offset_x": "60px",
+  "souls_offset_x": "38px",
+  "side_offset_y": "20px",
   "inventory_slots_opacity_idle": "40%",
 
   "minion_bar_width": "460px",

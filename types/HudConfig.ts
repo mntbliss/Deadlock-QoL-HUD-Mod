@@ -42,6 +42,7 @@ const DEFAULTS: Record<string, string> = {
   number_size: "28px",
   number_offset_y: "-32px",
   souls_offset_x: "16px",
+  side_offset_y: "8px",
   inventory_slots_opacity_idle: "40%",
   minion_bar_width: "460px",
   minion_bar_height: "42px",
@@ -131,6 +132,7 @@ export class HudConfig {
     const barH = this.css("bar_height", "22px").asNumber();
     const barW = this.css("bar_width", "440px").asNumber();
     const soulsRight = this.css("souls_offset_x", "16px").asNumber();
+    const sideNudge = this.css("side_offset_y", "8px").asNumber();
     const g4 = (n: number) => String(Number(n.toPrecision(4)));
 
     // Match hud_hp_bottom_center.css so souls/jar sit on the bar's vertical center.
@@ -141,7 +143,7 @@ export class HudConfig {
     const soulsH = 32;
     const jarVisualCenterFromBottom = 50;
     const belowBar = containerH - barsMarginTop - numbersH - numbersGap - barH;
-    const barCenter = hpBottom + belowBar + barH / 2;
+    const barCenter = hpBottom + belowBar + barH / 2 - sideNudge;
 
     this.set("souls_margin_bottom", `${g4(barCenter - soulsH / 2)}px`);
     this.set("souls_anchor_x", `${g4(barW / 2 + soulsRight)}px`);
