@@ -9,7 +9,7 @@ const ALIASES: Record<string, string> = {
   relload_crosshair_color: "reload_crosshair_color",
 };
 
-const STALE = ["minion_bar_scale", "level_hp_margin", "level_offset_x", "level_offset_y", "souls_offset_y"];
+const STALE = ["minion_bar_scale", "level_hp_margin", "level_offset_y", "souls_offset_y"];
 
 const DEFAULTS: Record<string, string> = {
   author: "mntbliss",
@@ -42,6 +42,7 @@ const DEFAULTS: Record<string, string> = {
   number_size: "28px",
   number_offset_y: "-32px",
   souls_offset_x: "16px",
+  level_offset_x: "16px",
   side_offset_y: "8px",
   shield_gap: "6px",
   swap_minimap_inventory: "false",
@@ -136,6 +137,7 @@ export class HudConfig {
     const barH = this.css("bar_height", "22px").asNumber();
     const barW = this.css("bar_width", "440px").asNumber();
     const soulsRight = this.css("souls_offset_x", "16px").asNumber();
+    const levelLeft = this.css("level_offset_x", "16px").asNumber();
     const sideNudge = this.css("side_offset_y", "8px").asNumber();
     const g4 = (n: number) => String(Number(n.toPrecision(4)));
 
@@ -145,13 +147,14 @@ export class HudConfig {
     const numbersH = 32;
     const numbersGap = 4;
     const soulsH = 32;
+    const jarPanelHalf = 30;
     const jarVisualCenterFromBottom = 50;
     const belowBar = containerH - barsMarginTop - numbersH - numbersGap - barH;
     const barCenter = hpBottom + belowBar + barH / 2 - sideNudge;
 
     this.set("souls_margin_bottom", `${g4(barCenter - soulsH / 2)}px`);
     this.set("souls_anchor_x", `${g4(barW / 2 + soulsRight)}px`);
-    this.set("level_anchor_x", `${g4(-(barW / 2 + 34))}px`);
+    this.set("level_anchor_x", `${g4(-(barW / 2 + levelLeft + jarPanelHalf))}px`);
     this.set("level_margin_bottom", `${g4(barCenter - jarVisualCenterFromBottom)}px`);
     this.set("move_level", moveLevel ? "true" : "false");
 

@@ -58,7 +58,7 @@ Toggles live in [`config.json`](config.json). Turn a feature off there if you on
 | [`panorama/styles/`](panorama/styles/) | The actual look. `@define HealthbarWidth: 440px;` etc. |
 | [`panorama/images/`](panorama/images/) | SVG textures (heart, HP dots, minimap grid). |
 
-Derived numbers (souls X, level X) are computed in [`types/HudConfig.ts`](types/HudConfig.ts) from `bar_width` + `souls_offset_x` + `side_offset_y` + `margin_bottom`.
+Derived numbers (souls X, level X) are computed in [`types/HudConfig.ts`](types/HudConfig.ts) from `bar_width` + `souls_offset_x` + `level_offset_x` + `side_offset_y` + `margin_bottom`.
 
 ### Finding Deadlock and the CSDK
 
