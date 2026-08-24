@@ -1,6 +1,6 @@
 /* Rounded-square minimap with faded edges and a dark dotted glass back.
  *
- * @defines are Panorama variables. compile_with_csdk.py overwrites them from config.json.
+ * @defines are Panorama variables. The build overwrites them from config.json.
  * The real fade is injected into the *first* vanilla rules (compiled CSS keeps those).
  */
 

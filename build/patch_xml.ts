@@ -30,6 +30,33 @@ export function hoistHpNumbers(text: string): string {
   return text.replace('<Panel class="health_bar_border">', row);
 }
 
+export function hoistShieldNumbers(text: string): string {
+  if (text.includes('id="mntbliss_shield_numbers"')) return text;
+
+  const block =
+    /<ProgressBarWithMiddle id="(tech_shield_bar|shield_bar)"([^>]*)>\s*<Panel class="progress_bar_numbers">\s*(<Label class="progress_bar_current"[^>]*>)\s*(<Label class="progress_bar_max"[^>]*>)\s*<\/Panel>\s*<\/ProgressBarWithMiddle>/gs;
+
+  const next = text.replace(block, (_, id: string, attrs: string, current: string, max: string) => {
+    const numId = id === "tech_shield_bar" ? "mntbliss_tech_shield_numbers" : "mntbliss_shield_numbers";
+
+    return (
+      `<Panel id="${numId}" class="mntbliss_shield_numbers">\n` +
+      `\t\t\t${current}\n` +
+      `\t\t\t${max}\n` +
+      `\t\t</Panel>\n` +
+      `\t\t<ProgressBarWithMiddle id="${id}"${attrs}></ProgressBarWithMiddle>`
+    );
+  });
+
+  if (next === text) {
+    console.log("WARN: could not hoist shield number labels");
+    return text;
+  }
+
+  console.log("Hoisted shield numbers out of the progress bars");
+  return next;
+}
+
 export function injectUnsecuredSoulsChip(text: string): string {
   if (text.includes('id="mntbliss_hp_souls"')) return text;
 

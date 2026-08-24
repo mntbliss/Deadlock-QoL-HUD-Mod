@@ -3,8 +3,8 @@
  */
 
 @define MinionBarWidth: 460px;
-@define MinionBarHeight: 42px;
-@define MinionUiScale: 360%;
+@define MinionBarHeight: 40px;
+@define MinionUiScale: 300%;
 @define MinionBorderRadius: 10px;
 @define MinionBorderWidth: 2px;
 @define MinionBorderColor: #FFFFFF88;

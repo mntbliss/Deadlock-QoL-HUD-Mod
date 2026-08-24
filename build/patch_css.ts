@@ -7,8 +7,8 @@ function props(pairs: Array<[string, string]>): CssReplacement[] {
 }
 
 export function flattenUnitHealthbars(text: string, cfg: HudConfig): string {
-  const uiScale = cfg.css("minion_ui_scale", "200%").asUiScale();
-  const barH = cfg.get("minion_bar_height", "42px");
+  const uiScale = cfg.css("minion_ui_scale", "300%").asUiScale();
+  const barH = cfg.get("minion_bar_height", "40px");
   const barW = cfg.get("minion_bar_width", "460px");
   const radius = cfg.get("minion_border_radius", "10px");
 
@@ -249,7 +249,7 @@ export function flattenPlayerHealthbar(text: string, cfg: HudConfig): string {
   return injectIntoFirstRule(
     text,
     "#shield_bar,#tech_shield_bar",
-    `vertical-align: top;\n\ty: ${cfg.get("shield_y", "22px")};\n\toverflow: noclip;`,
+    `vertical-align: top;\n\ty: ${cfg.get("shield_y", "24px")};\n\toverflow: noclip;`,
   );
 }
 

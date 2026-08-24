@@ -1,17 +1,22 @@
 # mntbliss QoL HUD
 
+
+<p align="center">
+  <img src="docs/banner.jpg" alt="" width="100%" />
+</p>
+
 A file-based Deadlock HUD addon. No injection. You edit CSS / `config.json`, this repo compiles them into Valve Panorama (`.vcss_c`, `.vxml_c`) and packs `game/citadel/addons/pak01_dir.vpk`.
 
-**Install:** clone this repo next to Deadlock’s `game/` folder (tip below), then double-click [`install_compiled.bat`](install_compiled.bat). That uses the prebuilt pack in [`compiled/`](compiled/). No Bun, no CSDK.
+**Install without Bun / Node / SDK:** clone this repo next to Deadlock’s `game/` folder (tip below), then double-click [`install_compiled.bat`](install_compiled.bat). That uses the prebuilt pack in [`compiled/`](compiled/). No Bun, no CSDK.
 
-**Rebuild / edit `config.json`:** install [Bun](https://bun.sh) and Reduced CSDK 12, then [`enable_mod.bat`](enable_mod.bat). If Deadlock or the CSDK is not found, set the paths in [`paths.json`](paths.json).
+**Rebuild / Customize `config.json`:** install [Bun](https://bun.sh) and Reduced CSDK 12, then [`enable_mod.bat`](enable_mod.bat). If Deadlock or the CSDK is not found, set the paths in [`paths.json`](paths.json).
 
 > [!TIP]
 > Clone into your Deadlock install (`steamapps/common/Deadlock`, next to `game/`) so the script finds the game automatically:
 >
 > ```bat
 > cd steamapps\common\Deadlock
-> git clone <this-repo-url> mntbliss_QoL_mod
+> git clone https://github.com/mntbliss/Deadlock-QoL-HUD-Mod.git
 > ```
 >
 > Steam → Deadlock → gear → Manage → Browse local files opens that folder.
@@ -24,10 +29,10 @@ Toggles live in [`config.json`](config.json). Turn a feature off there if you on
 
 | | Feature | Preview |
 | --- | --- | --- |
-| HP | Bottom-center capsule, numbers above the bar, dotted fill, shields overlaid on top | <img src="docs/previews/hp-bar.gif" alt="" width="200" /> |
+| HP | Bottom-center capsule, numbers above the bar, dotted fill, shields on top | <img src="docs/previews/hp-bar.gif" alt="" width="200" /> |
 | Souls / level | Souls glued to the right-middle of the HP bar. Vanilla XP jar on the left. Shop restores the left gold cluster | <img src="docs/previews/hp-bar.gif" alt="" width="200" /> |
 | Minimap | Rounded square, faded edges, dotted glass back | <img src="docs/previews/minimap.gif" alt="" width="200" /> |
-| Dota Corners | `swap_minimap_inventory`: minimap left, items right (Dota home). Shop (`B`) still uses vanilla left | <img src="docs/previews/minimap.gif" alt="" width="200" /> |
+| Dota Corners | `swap_minimap_inventory`: minimap left, items right (Dota players welcome). Shop (`B`) still uses vanilla left | <img src="docs/previews/minimap.gif" alt="" width="200" /> |
 | Crosshair | Heart outline. Pulses on low HP, cracks while reloading. Hit markers: `use_custom_hit_animation` / `use_custom_hit_headshot_animation` | <img src="docs/previews/heart-crosshair.gif" alt="" width="200" /> |
 | Minions | Chunky top-center bars for troopers. Heroes keep vanilla dotted pips | <img src="docs/previews/minion-bars.gif" alt="" width="200" /> |
 | Inventory | Idle dotted slots, sliders hidden. Shop (`B`) puts vanilla layout back | <img src="docs/previews/inventory.gif" alt="" width="200" /> |

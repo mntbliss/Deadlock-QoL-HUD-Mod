@@ -20,6 +20,7 @@ import {
 import { prepareNpcUnits } from "./patch_vdata.ts";
 import {
   hoistHpNumbers,
+  hoistShieldNumbers,
   injectHeartIntoHud,
   injectHeartsIntoGun,
   injectLowhpListener,
@@ -210,6 +211,10 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
 
     if (flags.playerHp && (name === "hud_health.xml" || name === "hud_health_single_bar.xml")) {
       text = hoistHpNumbers(text);
+    }
+
+    if (flags.playerHp && (name === "hud_health.xml" || name === "hud_health_stacked.xml")) {
+      text = hoistShieldNumbers(text);
     }
 
     if (flags.minions) text = injectMinionHpLabel(text);

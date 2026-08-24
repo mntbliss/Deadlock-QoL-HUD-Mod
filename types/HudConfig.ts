@@ -28,7 +28,7 @@ const DEFAULTS: Record<string, string> = {
   regular_hit_hearts_color: "#FFFFFF",
   headshot_spikes_color: "#FFFFFF",
   heart_size: "36px",
-  fill_color: "#4DFFB5",
+  fill_color: "#e2ffde",
   fill_low_color: "#FF5A5A",
   fill_mid_color: "#E8FF5A",
   track_color: "#0A0A0A99",
@@ -42,18 +42,18 @@ const DEFAULTS: Record<string, string> = {
   bar_height: "22px",
   border_radius: "12px",
   border_width: "1px",
-  margin_bottom: "118px",
+  margin_bottom: "120px",
   number_size: "28px",
-  number_offset_y: "-32px",
-  souls_offset_x: "16px",
-  level_offset_x: "16px",
-  side_offset_y: "8px",
-  shield_gap: "6px",
+  number_offset_y: "-30px",
+  souls_offset_x: "20px",
+  level_offset_x: "20px",
+  side_offset_y: "20px",
+  shield_gap: "4px",
   swap_minimap_inventory: "false",
   inventory_slots_opacity_idle: "40%",
   minion_bar_width: "460px",
-  minion_bar_height: "42px",
-  minion_ui_scale: "360%",
+  minion_bar_height: "40px",
+  minion_ui_scale: "300%",
   minion_border_radius: "10px",
   minion_border_width: "2px",
   minion_border_color: "#FFFFFF88",
@@ -139,12 +139,12 @@ export class HudConfig {
   }
 
   applyInventoryLayout(moveLevel: boolean): void {
-    const hpBottom = this.css("margin_bottom", "118px").asNumber();
+    const hpBottom = this.css("margin_bottom", "120px").asNumber();
     const barH = this.css("bar_height", "22px").asNumber();
     const barW = this.css("bar_width", "440px").asNumber();
-    const soulsRight = this.css("souls_offset_x", "16px").asNumber();
-    const levelLeft = this.css("level_offset_x", "16px").asNumber();
-    const sideNudge = this.css("side_offset_y", "8px").asNumber();
+    const soulsRight = this.css("souls_offset_x", "20px").asNumber();
+    const levelLeft = this.css("level_offset_x", "20px").asNumber();
+    const sideNudge = this.css("side_offset_y", "20px").asNumber();
     const g4 = (n: number) => String(Number(n.toPrecision(4)));
 
     // Match hud_hp_bottom_center.css so souls/jar sit on the bar's vertical center.
@@ -165,7 +165,7 @@ export class HudConfig {
     this.set("move_level", moveLevel ? "true" : "false");
 
     // y: 28px sits the 8px shield flush on the HP bar. Larger gap moves it up.
-    const shieldGap = this.css("shield_gap", "6px").asNumber();
+    const shieldGap = this.css("shield_gap", "4px").asNumber();
     this.set("shield_y", `${g4(28 - shieldGap)}px`);
   }
 
