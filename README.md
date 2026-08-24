@@ -7,9 +7,11 @@
 
 A file-based Deadlock HUD addon. No injection. You edit CSS / `config.json`, this repo compiles them into Valve Panorama (`.vcss_c`, `.vxml_c`) and packs `game/citadel/addons/pak01_dir.vpk`.
 
-**Install without Bun / Node / SDK:** clone this repo next to Deadlock’s `game/` folder (tip below), then double-click [`install_compiled.bat`](install_compiled.bat). That uses the prebuilt pack in [`compiled/`](compiled/). No Bun, no CSDK.
+### **Install without Bun / Node / SDK:** 
+clone this repo next to Deadlock’s `game/` folder (tip below), then double-click [`install_compiled.bat`](install_compiled.bat). That uses the prebuilt pack in [`compiled/`](compiled/). No Bun, no CSDK.
 
-**Rebuild / Customize `config.json`:** install [Bun](https://bun.sh) and Reduced CSDK 12, then [`enable_mod.bat`](enable_mod.bat). If Deadlock or the CSDK is not found, set the paths in [`paths.json`](paths.json).
+### **Rebuild / Customize `config.json`:** 
+install [Bun](https://bun.sh) and Reduced CSDK 12, then [`enable_mod.bat`](enable_mod.bat). If Deadlock or the CSDK is not found, set the paths in [`paths.json`](paths.json).
 
 > [!TIP]
 > Clone into your Deadlock install (`steamapps/common/Deadlock`, next to `game/`) so the script finds the game automatically:
