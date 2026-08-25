@@ -34,7 +34,7 @@ function main(): void {
   compileFiles(paths, inputs);
 
   const found = walk(paths.gameOut).filter((p) =>
-    [".vcss_c", ".vxml_c", ".vdata_c", ".vsvg_c"].includes(path.extname(p)),
+    [".vcss_c", ".vxml_c", ".vjs_c", ".vdata_c", ".vsvg_c"].includes(path.extname(p)),
   );
 
   if (!found.length) {

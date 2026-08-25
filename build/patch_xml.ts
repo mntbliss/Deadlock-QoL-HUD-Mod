@@ -78,6 +78,23 @@ export function injectUnsecuredSoulsChip(text: string): string {
   );
 }
 
+export function injectGunHitScript(text: string): string {
+  if (text.includes("mntbliss_hit_fx.vjs_c")) return text;
+
+  if (!text.includes("</styles>")) {
+    BuildError.fail("element_gun.xml is missing </styles>");
+  }
+
+  return text.replace(
+    "</styles>",
+    `</styles>
+	<scripts>
+		<include src="s2r://panorama/scripts/mntbliss_hit_fx.vjs_c" />
+	</scripts>`,
+    1,
+  );
+}
+
 export function injectHeartsIntoGun(
   text: string,
   opts: { heart: boolean; customHit: boolean; customHeadshot: boolean } = {
@@ -91,6 +108,8 @@ export function injectHeartsIntoGun(
   if (!text.includes(needle)) {
     BuildError.fail("element_gun.xml is missing Citadel_AbilityHUDElement_Gun");
   }
+
+  if (opts.customHit || opts.customHeadshot) text = injectGunHitScript(text);
 
   const images: string[] = [];
 
@@ -127,8 +146,7 @@ export function injectHeartsIntoGun(
   if (opts.customHeadshot && !text.includes('id="mntbliss_heart_spikes"')) {
     const cracked = '<Image id="mntbliss_heart_cracked" src="s2r://panorama/images/heart_crosshair_cracked.vsvg" />';
     const heart = '<Image id="mntbliss_heart_crosshair" src="s2r://panorama/images/heart_crosshair.vsvg" />';
-    const spikes =
-      '\n\t\t<Image id="mntbliss_heart_spikes" src="s2r://panorama/images/heart_rose_spikes.vsvg" />';
+    const spikes = '\n\t\t<Image id="mntbliss_heart_spikes" src="s2r://panorama/images/heart_rose_spikes.vsvg" />';
 
     if (text.includes(cracked)) text = text.replace(cracked, `${cracked}${spikes}`);
     else if (text.includes(heart)) text = text.replace(heart, `${heart}${spikes}`);
@@ -137,8 +155,7 @@ export function injectHeartsIntoGun(
 
   if (opts.customHit && !text.includes('id="mntbliss_hit_hearts"')) {
     const spikes = '<Image id="mntbliss_heart_spikes" src="s2r://panorama/images/heart_rose_spikes.vsvg" />';
-    const hitHearts =
-      '\n\t\t<Image id="mntbliss_hit_hearts" src="s2r://panorama/images/heart_hit_hearts.vsvg" />';
+    const hitHearts = '\n\t\t<Image id="mntbliss_hit_hearts" src="s2r://panorama/images/heart_hit_hearts.vsvg" />';
 
     if (text.includes(spikes)) text = text.replace(spikes, `${spikes}${hitHearts}`);
     else text = text.replace(needle, `${needle}${hitHearts}`);

@@ -41,6 +41,22 @@ function writeNl(file: string, text: string): void {
   fs.writeFileSync(file, text.replaceAll("\r\n", "\n"));
 }
 
+function secondsFromConfig(raw: string): number {
+  const text = raw.trim().toLowerCase();
+  let value = Number.NaN;
+
+  if (text.endsWith("ms")) value = Number(text.slice(0, -2)) / 1000;
+  else if (text.endsWith("s")) value = Number(text.slice(0, -1));
+  else {
+    value = Number(text);
+    if (value > 10) value /= 1000;
+  }
+
+  if (!Number.isFinite(value)) return 0.36;
+
+  return Math.max(value, 0.05);
+}
+
 export function prepareSources(paths: ProjectPaths): CompileInput[] {
   fs.rmSync(paths.content, { recursive: true, force: true });
   fs.rmSync(paths.gameOut, { recursive: true, force: true });
@@ -48,6 +64,7 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
   fs.mkdirSync(path.join(paths.content, "panorama", "styles"), { recursive: true });
   fs.mkdirSync(path.join(paths.content, "panorama", "layout"), { recursive: true });
   fs.mkdirSync(path.join(paths.content, "panorama", "images"), { recursive: true });
+  fs.mkdirSync(path.join(paths.content, "panorama", "scripts"), { recursive: true });
   fs.mkdirSync(path.join(paths.content, "scripts"), { recursive: true });
   fs.mkdirSync(paths.gameOut, { recursive: true });
 
@@ -252,6 +269,26 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
       }),
     );
     inputs.push(new CompileInput(gunDest));
+
+    if (flags.customHit || flags.customHeadshot) {
+      const jsSrc = path.join(paths.root, "panorama", "scripts", "mntbliss_hit_fx.js");
+
+      if (!fs.existsSync(jsSrc)) BuildError.fail(`Missing hit FX script: ${jsSrc}`);
+
+      const duration = secondsFromConfig(cfg.get("hit_animation_duration", "0.36s"));
+      const speed = Number(cfg.get("hit_animation_speed", "1")) || 1;
+      const jsDest = path.join(paths.content, "panorama", "scripts", "mntbliss_hit_fx.js");
+
+      writeNl(
+        jsDest,
+        fs
+          .readFileSync(jsSrc, "utf8")
+          .replaceAll("__HIT_DURATION__", String(duration))
+          .replaceAll("__HIT_SPEED__", String(speed)),
+      );
+      inputs.push(new CompileInput(jsDest));
+      console.log(`Packed script: mntbliss_hit_fx.js (${duration}s x${speed})`);
+    }
 
     if (flags.heart) {
       const hudSrc = path.join(paths.extract, "layout", "hud.xml");

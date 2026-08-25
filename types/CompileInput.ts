@@ -6,6 +6,7 @@ import type { ProjectPaths } from "./ProjectPaths.ts";
 const SUFFIX: Record<string, string> = {
   ".css": ".vcss_c",
   ".xml": ".vxml_c",
+  ".js": ".vjs_c",
   ".vdata": ".vdata_c",
   ".svg": ".vsvg_c",
 };

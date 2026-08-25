@@ -175,7 +175,7 @@
 	height: 200px;
 	horizontal-align: center;
 	vertical-align: center;
-	visibility: collapse;
+	visibility: visible;
 	opacity: 0;
 	overflow: noclip;
 	z-index: 86;
@@ -189,7 +189,7 @@
 	height: 200px;
 	horizontal-align: center;
 	vertical-align: center;
-	visibility: collapse;
+	visibility: visible;
 	opacity: 0;
 	overflow: noclip;
 	z-index: 88;
@@ -215,9 +215,9 @@
 		pre-transform-scale2d: 0.9;
 		opacity: 1;
 	}
-	16%
+	35%
 	{
-		pre-transform-scale2d: 1.18;
+		pre-transform-scale2d: 1.22;
 		opacity: 1;
 	}
 	100%
@@ -226,54 +226,29 @@
 		opacity: 0;
 	}
 }
-/* === /mntbliss:custom_hit_shared === */
 
-/* === mntbliss:custom_hit === */
-.show_hit_marker #mntbliss_hit_hearts
+#mntbliss_hit_hearts.mntbliss_hit_play,
+#mntbliss_heart_spikes.mntbliss_hit_play
 {
-	visibility: visible;
-	opacity: 1;
 	animation-name: mntbliss_rose_hit;
-	animation-duration: 0.4s;
+	animation-duration: 0.36s;
 	animation-timing-function: ease-out;
+	animation-direction: normal;
 	animation-iteration-count: 1;
 	animation-fill-mode: forwards;
 }
+/* === /mntbliss:custom_hit_shared === */
 
+/* === mntbliss:custom_hit === */
 .show_hit_marker .hit_marker,
 .show_hit_marker #hit_markers .hit_marker
 {
 	visibility: collapse;
 	opacity: 0;
 }
-
-.show_crit_hit_marker #mntbliss_hit_hearts
-{
-	visibility: collapse;
-	opacity: 0;
-	animation-name: none;
-}
 /* === /mntbliss:custom_hit === */
 
 /* === mntbliss:custom_headshot === */
-.show_crit_hit_marker #mntbliss_heart_spikes
-{
-	visibility: visible;
-	opacity: 1;
-	animation-name: mntbliss_rose_hit;
-	animation-duration: 0.4s;
-	animation-timing-function: ease-out;
-	animation-iteration-count: 1;
-	animation-fill-mode: forwards;
-}
-
-.show_crit_hit_marker #mntbliss_hit_hearts
-{
-	visibility: collapse;
-	opacity: 0;
-	animation-name: none;
-}
-
 .show_crit_hit_marker #mntbliss_heart_crosshair
 {
 	animation-name: mntbliss_heart_hit;

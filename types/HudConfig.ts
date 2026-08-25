@@ -61,6 +61,8 @@ const DEFAULTS: Record<string, string> = {
   minimap_border_radius: "32px",
   minimap_bg_color: "#0000004D",
   minimap_scale: "100%",
+  hit_animation_duration: "0.36s",
+  hit_animation_speed: "1",
 };
 
 export const HIDDEN_CONFIG_KEYS = new Set([
