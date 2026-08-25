@@ -2,3 +2,4 @@ node_modules/
 *.vpk.new
 .DS_Store
 Thumbs.db
+*.zip
