@@ -11,8 +11,9 @@
   var playToken = 0;
   var playing = false;
   var stillHitting = false;
-  var lastHitAt = 0;
+  var lastShotAt = 0;
   var lastInterval = 0;
+  var lastAmmo = -1;
   var wasHit = false;
   var wasCrit = false;
   var nextIsCrit = false;
@@ -45,16 +46,27 @@
     return Date.now() / 1000;
   }
 
-  function noteHit() {
+  function ammoCount() {
+    var label = child("mntbliss_weapon_ammo");
+
+    if (!valid(label)) return -1;
+
+    var value = parseInt(label.text, 10);
+
+    return isNaN(value) ? -1 : value;
+  }
+
+  function noteShot() {
     var t = now();
 
-    if (lastHitAt > 0) {
-      var interval = t - lastHitAt;
+    if (lastShotAt > 0) {
+      var interval = t - lastShotAt;
 
       if (interval > 0.04 && interval < MAX_INTERVAL) lastInterval = interval;
     }
 
-    lastHitAt = t;
+    lastShotAt = t;
+    updateFireRateLabel();
   }
 
   function clipDuration() {
@@ -63,6 +75,28 @@
     if (lastInterval > 0) duration = Math.min(duration, lastInterval);
 
     return Math.max(MIN_DURATION, duration);
+  }
+
+  function updateFireRateLabel() {
+    var label = child("mntbliss_fire_rate_label");
+
+    if (!valid(label) || lastInterval <= 0) return;
+
+    label.text = (1 / lastInterval).toFixed(2) + "/s";
+
+    var row = child("mntbliss_fire_rate");
+
+    if (valid(row)) row.AddClass("mntbliss_has_rate");
+  }
+
+  function pollAmmo() {
+    var ammo = ammoCount();
+
+    if (ammo < 0) return;
+
+    if (lastAmmo >= 0 && ammo < lastAmmo) noteShot();
+
+    lastAmmo = ammo;
   }
 
   function hide(panel) {
@@ -118,7 +152,6 @@
   }
 
   function onHit(isCrit) {
-    noteHit();
     nextIsCrit = isCrit;
 
     if (playing && isCrit && !wasCrit) {
@@ -138,6 +171,8 @@
 
   function tick() {
     if (!valid(gun)) return;
+
+    pollAmmo();
 
     var isCrit = hasClass(gun, "show_crit_hit_marker");
     var isHit = hasClass(gun, "show_hit_marker") || isCrit;

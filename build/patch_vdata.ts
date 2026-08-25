@@ -11,7 +11,6 @@ const EMPTY = 'm_HealthBarParticle = resource_name:""';
 
 export function prepareNpcUnits(paths: ProjectPaths, inputs: CompileInput[], cfg: HudConfig): void {
   if (!cfg.isEnabled("use_minion_panorama_bars")) {
-    console.log("Skipping npc_units.vdata (use_minion_panorama_bars is off)");
     return;
   }
 
@@ -37,6 +36,5 @@ export function prepareNpcUnits(paths: ProjectPaths, inputs: CompileInput[], cfg
   const dest = path.join(paths.content, "scripts", "npc_units.vdata");
 
   fs.writeFileSync(dest, text.replaceAll("\r\n", "\n"));
-  console.log(`Cleared HealthBarParticle on ${count} trooper entries`);
   inputs.push(new CompileInput(dest));
 }

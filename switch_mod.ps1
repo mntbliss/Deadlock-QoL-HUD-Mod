@@ -1,11 +1,37 @@
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateSet("enable", "disable")]
+    [ValidateSet("enable", "disable", "log")]
     [string]$Action,
-    [string]$DeadlockRoot = ""
+    [string]$DeadlockRoot = "",
+    [string]$Kind = ""
 )
 
 $ErrorActionPreference = "Stop"
+
+function Emoji([int]$Code) {
+    return [char]::ConvertFromUtf32($Code)
+}
+
+function Write-ModLog([string]$Icon, [string]$Status, [string]$Message, [string]$Color = "Green") {
+    Write-Host "[$Icon] [" -NoNewline
+    Write-Host $Status -ForegroundColor $Color -NoNewline
+    Write-Host "] $Message"
+}
+
+if ($Action -eq "log") {
+    switch ($Kind) {
+        "enable" { Write-ModLog (Emoji 0x2705) "OK" "enable mntbliss QoL HUD" "Green" }
+        "disable" { Write-ModLog (Emoji 0x2705) "OK" "disable mntbliss QoL HUD" "Green" }
+        "install" { Write-ModLog (Emoji 0x1F4E6) "OK" "install prebuilt pack" "Green" }
+        "close" { Write-ModLog (Emoji 0x1F44B) "OK" "fully close deadlock, then launch" "Green" }
+        "fail" { Write-ModLog (Emoji 0x274C) "ERROR" "compile failed, fully close deadlock" "Red" }
+        "bun" { Write-ModLog (Emoji 0x274C) "ERROR" "bun not found" "Red" }
+        "missing" { Write-ModLog (Emoji 0x274C) "ERROR" "missing compiled\pak01_dir.vpk" "Red" }
+        "nodeadlock" { Write-ModLog (Emoji 0x274C) "ERROR" "could not find deadlock" "Red" }
+        default { Write-ModLog (Emoji 0x274C) "ERROR" "unknown log kind" "Red"; exit 1 }
+    }
+    exit 0
+}
 
 function Test-DeadlockInstall([string]$dir) {
     return Test-Path (Join-Path $dir "game\citadel\gameinfo.gi")
@@ -63,7 +89,7 @@ function Resolve-DeadlockRoot {
 
 $install = Resolve-DeadlockRoot
 if (-not $install) {
-    Write-Host "Could not find Deadlock."
+    Write-ModLog (Emoji 0x274C) "ERROR" "could not find Deadlock" "Red"
     Write-Host "Set deadlock_root in paths.json."
     exit 1
 }
@@ -87,13 +113,13 @@ function Test-GameinfoWritable {
 }
 
 if (-not (Test-Path $gameinfo)) {
-    Write-Host "Could not find gameinfo.gi"
+    Write-ModLog (Emoji 0x274C) "ERROR" "could not find gameinfo.gi" "Red"
     exit 1
 }
 
 if (-not (Test-GameinfoWritable)) {
-    Write-Host "Deadlock still has gameinfo.gi locked."
-    Write-Host "Fully close the game (and Steam overlay if it stays open), then run this again."
+    Write-ModLog (Emoji 0x274C) "ERROR" "compile failed, fully close deadlock" "Red"
+    Write-ModLog (Emoji 0x26A0) "WARN" "gameinfo.gi is locked" "DarkYellow"
     exit 1
 }
 
@@ -115,22 +141,23 @@ if ($Action -eq "enable") {
     if ($text -notmatch "citadel/addons") {
         if (-not (Test-Path $backup)) {
             Copy-Item $gameinfo $backup -Force
-            Write-Host "Saved vanilla backup: gameinfo.gi.bak_hpbar"
         }
         $patched = Enable-AddonsPath $text
         [System.IO.File]::WriteAllText($gameinfo, $patched)
-        Write-Host "Enabled citadel/addons in gameinfo.gi"
-    }
-    else {
-        Write-Host "addons path already present in gameinfo.gi"
     }
 
     New-Item $addons -ItemType Directory -Force | Out-Null
 
     $compiled = Join-Path $PSScriptRoot "compiled\pak01_dir.vpk"
     if (Test-Path $compiled) {
-        Copy-Item $compiled $vpk -Force
-        Write-Host "Installed compiled\pak01_dir.vpk"
+        try {
+            Copy-Item $compiled $vpk -Force
+        }
+        catch {
+            Write-ModLog (Emoji 0x274C) "ERROR" "compile failed, fully close deadlock" "Red"
+            Write-ModLog (Emoji 0x26A0) "WARN" "locking pak01_dir.vpk" "DarkYellow"
+            exit 1
+        }
     }
 
     if (Test-Path $vpkOff) {
@@ -139,27 +166,26 @@ if ($Action -eq "enable") {
     }
 
     if (-not (Test-Path $vpk)) {
-        Write-Host "HUD pack is missing: $vpk"
+        Write-ModLog (Emoji 0x274C) "ERROR" "compile failed, fully close deadlock" "Red"
+        Write-ModLog (Emoji 0x274C) "ERROR" "hud pack is missing" "Red"
         exit 1
     }
 
-    Write-Host "QoL HUD pack is active (player bar + minion Panorama bars)."
+    Write-ModLog (Emoji 0x2705) "OK" "copied to game" "Green"
     exit 0
 }
 
 if (-not (Test-Path $backup)) {
-    Write-Host "No backup found. Nothing to restore."
+    Write-ModLog (Emoji 0x26A0) "WARN" "no backup found" "DarkYellow"
     exit 1
 }
 
 Copy-Item $backup $gameinfo -Force
-Write-Host "Restored gameinfo.gi from backup"
 
 if (Test-Path $vpk) {
     if (Test-Path $vpkOff) { Remove-Item $vpkOff -Force }
     Rename-Item $vpk "pak01_dir.vpk.off"
-    Write-Host "Parked HUD pack as pak01_dir.vpk.off"
 }
 
-Write-Host "Default HUD restored."
+Write-ModLog (Emoji 0x2705) "OK" "default hud restored" "Green"
 exit 0

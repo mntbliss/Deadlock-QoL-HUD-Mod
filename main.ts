@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { assertCompiled, compileFiles, packVpk } from "./build/compile.ts";
 import { prepareSources } from "./build/prepare.ts";
 import { BuildError } from "./types/BuildError.ts";
+import { Log } from "./types/Log.ts";
 import { ProjectPaths } from "./types/ProjectPaths.ts";
 
 function walk(dir: string): string[] {
@@ -26,11 +27,12 @@ function main(): void {
   const root = path.dirname(fileURLToPath(import.meta.url));
   const paths = ProjectPaths.resolve(root);
 
-  console.log(`Deadlock: ${paths.deadlock}`);
-  console.log(`CSDK: ${paths.csdk}`);
-  console.log(`Vanilla HUD: ${paths.extract}`);
+  Log.loading(paths.deadlock);
+  Log.loading(paths.csdk);
+  Log.loading(paths.extract);
 
   const inputs = prepareSources(paths);
+
   compileFiles(paths, inputs);
 
   const found = walk(paths.gameOut).filter((p) =>
@@ -38,26 +40,13 @@ function main(): void {
   );
 
   if (!found.length) {
-    const nearby = walk(path.join(paths.csdk, "game", "citadel_addons")).filter(
-      (p) => path.basename(p).startsWith("hud_health") && p.endsWith(".vcss_c"),
-    );
-
-    console.log("No outputs under GAME_OUT. Nearby compiled files:", nearby.slice(0, 20));
     BuildError.fail("Compile produced no outputs under game/citadel_addons/hp_bar");
-  }
-
-  console.log("Compiled outputs:");
-
-  for (const file of found.sort()) {
-    console.log(" ", path.relative(paths.gameOut, file), fs.statSync(file).size);
   }
 
   assertCompiled(paths, inputs);
   packVpk(paths);
 
-  console.log("\nDone. Fully close Deadlock if it's open, then launch again.");
-  console.log("Edit config.json, then run enable_mod.bat / bun run build again.");
-  console.log("After a game patch, refresh assets/ from a new HUD extract before rebuilding.");
+  Log.ok("👋", "fully close deadlock, then launch");
 }
 
 main();

@@ -1,3 +1,5 @@
+import { Log } from "./Log.ts";
+
 export class BuildError extends Error {
   readonly exitCode: number;
 
@@ -8,7 +10,7 @@ export class BuildError extends Error {
   }
 
   static fail(message: string, exitCode = 1): never {
-    console.error(message);
+    Log.error("❌", message);
     process.exit(exitCode);
   }
 }

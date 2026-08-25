@@ -498,11 +498,13 @@
 .healthRegenContainer
 {
 	horizontal-align: center;
-	vertical-align: top;
-	margin-top: 2px;
+	vertical-align: bottom;
+	margin-top: 0px;
+	margin-bottom: 44px;
+	margin-left: 168px;
 	ignore-parent-flow: true;
-	margin-left: 0px;
 	visibility: visible;
+	flow-children: right;
 }
 
 .shieldNumbersContainer,

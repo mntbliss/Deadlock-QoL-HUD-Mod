@@ -4,7 +4,8 @@ import path from "node:path";
 import { BuildError } from "../types/BuildError.ts";
 import { CompileInput } from "../types/CompileInput.ts";
 import { FeatureFlags } from "../types/FeatureFlags.ts";
-import { HIDDEN_CONFIG_KEYS, HudConfig } from "../types/HudConfig.ts";
+import { HudConfig } from "../types/HudConfig.ts";
+import { Log } from "../types/Log.ts";
 import type { ProjectPaths } from "../types/ProjectPaths.ts";
 import { renderTemplate, sanitizeBaseCss, stripViewerNoise } from "./css_edit.ts";
 import {
@@ -71,23 +72,20 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
   const cfg = HudConfig.load(paths);
   const flags = new FeatureFlags(cfg);
 
-  console.log(`Building: ${cfg.get("mod_name", "HUD mod")} by ${cfg.get("author", "unknown")}`);
   cfg.applyInventoryLayout(flags.playerHp);
 
-  console.log(`  use_character_hp_bar: ${flags.playerHp}`);
-  console.log(`  use_minion_panorama_bars: ${flags.minions}`);
-  console.log(`  use_minimap_style: ${flags.minimap}`);
-  console.log(`  use_heart_crosshair: ${flags.heart}`);
-  console.log(`  use_heart_pulse_low_hp_crosshair: ${flags.heartPulse}`);
-  console.log(`  use_custom_hit_animation: ${flags.customHit}`);
-  console.log(`  use_custom_hit_headshot_animation: ${flags.customHeadshot}`);
-  console.log(`  use_clear_inventory: ${flags.inventory}`);
-  console.log(`  swap_minimap_inventory: ${flags.swapCorners}`);
-  console.log("Config:");
+  const on = [
+    flags.playerHp && "hp",
+    flags.minions && "minions",
+    flags.minimap && "minimap",
+    flags.heart && "heart",
+    flags.customHit && "hit",
+    flags.customHeadshot && "headshot",
+    flags.inventory && "inventory",
+    flags.swapCorners && "corners",
+  ].filter(Boolean);
 
-  for (const [key, value] of cfg.entries()) {
-    if (!HIDDEN_CONFIG_KEYS.has(key)) console.log(`  ${key}: ${value}`);
-  }
+  Log.ok("✨", `${cfg.get("mod_name", "HUD mod")} · ${on.join(" · ")}`);
 
   if (!flags.any) {
     BuildError.fail("All use_* toggles are off. Nothing to pack.");
@@ -213,7 +211,7 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
     const src = path.join(paths.extract, "layout", name);
 
     if (!fs.existsSync(src)) {
-      console.log(`skip missing layout: ${name}`);
+      Log.warn("⚠️", `skip missing layout ${name}`);
       continue;
     }
 
@@ -270,7 +268,7 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
     );
     inputs.push(new CompileInput(gunDest));
 
-    if (flags.customHit || flags.customHeadshot) {
+    if (flags.gunHud) {
       const jsSrc = path.join(paths.root, "panorama", "scripts", "mntbliss_hit_fx.js");
 
       if (!fs.existsSync(jsSrc)) BuildError.fail(`Missing hit FX script: ${jsSrc}`);
@@ -287,7 +285,6 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
           .replaceAll("__HIT_SPEED__", String(speed)),
       );
       inputs.push(new CompileInput(jsDest));
-      console.log(`Packed script: mntbliss_hit_fx.js (${duration}s x${speed})`);
     }
 
     if (flags.heart) {
@@ -315,7 +312,6 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
 
       fs.copyFileSync(path.join(images, name), dest);
       inputs.push(new CompileInput(dest));
-      console.log(`Packed texture: ${name}`);
     }
   }
 

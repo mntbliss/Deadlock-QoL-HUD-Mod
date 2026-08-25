@@ -2,8 +2,14 @@
 setlocal EnableExtensions
 cd /d "%~dp0"
 
+call :main
 echo.
-echo  DISABLE: restore default Deadlock HUD / minion bars
+pause
+exit /b %ERRORLEVEL%
+
+:main
+echo.
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch_mod.ps1" -Action log -Kind disable
 echo.
 
 set "DEADLOCK_ROOT="
@@ -17,11 +23,5 @@ if defined DEADLOCK_ROOT (
 ) else (
     powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0switch_mod.ps1" -Action disable
 )
-if errorlevel 1 goto :end
-
-echo.
-echo  Mod is OFF. Restart Deadlock to get the original HP bar back.
-echo.
-
-:end
-pause
+if errorlevel 1 exit /b 1
+exit /b 0

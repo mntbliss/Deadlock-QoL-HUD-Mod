@@ -1,4 +1,5 @@
 import { BuildError } from "../types/BuildError.ts";
+import { Log } from "../types/Log.ts";
 
 export function hoistHpNumbers(text: string): string {
   if (text.includes('class="hp_numbers_row"')) return text;
@@ -8,7 +9,7 @@ export function hoistHpNumbers(text: string): string {
   const next = text.replace(pattern, "");
 
   if (next === text) {
-    console.log("WARN: could not hoist HP number labels");
+    Log.warn("⚠️", "could not hoist HP numbers");
     return text;
   }
 
@@ -22,11 +23,10 @@ export function hoistHpNumbers(text: string): string {
     '\t\t\t<Panel class="health_bar_border">';
 
   if (!text.includes('<Panel class="health_bar_border">')) {
-    console.log("WARN: health_bar_border missing after hoist");
+    Log.warn("⚠️", "health_bar_border missing after hoist");
     return text;
   }
 
-  console.log("Hoisted HP numbers out of the progress bar");
   return text.replace('<Panel class="health_bar_border">', row);
 }
 
@@ -49,11 +49,10 @@ export function hoistShieldNumbers(text: string): string {
   });
 
   if (next === text) {
-    console.log("WARN: could not hoist shield number labels");
+    Log.warn("⚠️", "could not hoist shield numbers");
     return text;
   }
 
-  console.log("Hoisted shield numbers out of the progress bars");
   return next;
 }
 
@@ -63,7 +62,7 @@ export function injectUnsecuredSoulsChip(text: string): string {
   const needle = "<CitadelHudSoulAPContainer>";
 
   if (!text.includes(needle)) {
-    console.log("WARN: gold container missing CitadelHudSoulAPContainer");
+    Log.warn("⚠️", "gold container missing CitadelHudSoulAPContainer");
     return text;
   }
 
@@ -91,8 +90,32 @@ export function injectGunHitScript(text: string): string {
 	<scripts>
 		<include src="s2r://panorama/scripts/mntbliss_hit_fx.vjs_c" />
 	</scripts>`,
-    1,
   );
+}
+
+export function injectFireRateIntoGun(text: string): string {
+  if (!text.includes('id="mntbliss_weapon_ammo"')) {
+    text = text.replace(
+      /<Label class="weapon_ammo" text="\{i:current_clip_ammo\}" \/>/,
+      '<Label id="mntbliss_weapon_ammo" class="weapon_ammo" text="{i:current_clip_ammo}" />',
+    );
+  }
+
+  if (text.includes('id="mntbliss_fire_rate"')) return text;
+
+  const rate = `<Panel id="mntbliss_fire_rate" class="mntbliss_fire_rate">
+				<Image class="mntbliss_fire_rate_icon" src="s2r://panorama/images/icons/properties/fire_rate.vsvg" />
+				<Label id="mntbliss_fire_rate_label" class="mntbliss_fire_rate_label" text="" />
+			</Panel>`;
+
+  const next = text.replace(/(<Panel id="ammo_panel">[\s\S]*?<\/Panel>)/, `$1\n\t\t\t${rate}`);
+
+  if (next === text) {
+    Log.warn("⚠️", "could not inject fire rate under ammo");
+    return text;
+  }
+
+  return next;
 }
 
 export function injectHeartsIntoGun(
@@ -109,7 +132,8 @@ export function injectHeartsIntoGun(
     BuildError.fail("element_gun.xml is missing Citadel_AbilityHUDElement_Gun");
   }
 
-  if (opts.customHit || opts.customHeadshot) text = injectGunHitScript(text);
+  text = injectGunHitScript(text);
+  text = injectFireRateIntoGun(text);
 
   const images: string[] = [];
 
