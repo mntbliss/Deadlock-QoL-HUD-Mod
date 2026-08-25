@@ -13,6 +13,7 @@ import {
   flattenHeartCrosshair,
   flattenMinimap,
   flattenPlayerHealthbar,
+  flattenStatsMonitor,
   flattenSwapCorners,
   flattenUnitHealthbars,
   heartOverrideCss,
@@ -81,6 +82,8 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
     flags.heart && "heart",
     flags.customHit && "hit",
     flags.customHeadshot && "headshot",
+    flags.fireRate && "firerate",
+    flags.statsMonitor && "stats",
     flags.inventory && "inventory",
     flags.swapCorners && "corners",
   ].filter(Boolean);
@@ -99,8 +102,10 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
         heart: flags.heart,
         customHit: flags.customHit,
         customHeadshot: flags.customHeadshot,
+        fireRate: flags.fireRate,
       })
     : "";
+  const statsOverride = flags.statsMonitor ? renderTemplate(paths.statsCss, cfg) : "";
   let inventoryOverride = "";
 
   if (flags.inventory) {
@@ -139,6 +144,13 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
 
   if (flags.swapCorners && !styleNames.includes("hud.css")) styleNames.push("hud.css");
 
+  if (flags.statsMonitor) {
+    if (!styleNames.includes("hud.css")) styleNames.push("hud.css");
+    if (!styleNames.includes("citadel_hud_active_player_stats.css")) {
+      styleNames.push("citadel_hud_active_player_stats.css");
+    }
+  }
+
   for (const name of styleNames) {
     const src = path.join(paths.extract, "styles", name);
 
@@ -176,6 +188,13 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
         text = flattenSwapCorners(text);
         text = `${text.trimEnd()}\n\n/* === mntbliss swap corners === */\n${cfg.swapCornersCss()}\n`;
       }
+      if (flags.statsMonitor) {
+        text = flattenStatsMonitor(text, cfg, flags.swapCorners);
+        text = `${text.trimEnd()}\n\n/* === mntbliss stats monitor === */\n${statsOverride}\n`;
+      }
+    } else if (name === "citadel_hud_active_player_stats.css") {
+      text = flattenStatsMonitor(text, cfg, flags.swapCorners);
+      text = `${text.trimEnd()}\n\n/* === mntbliss stats monitor === */\n${statsOverride}\n`;
     } else if (name.endsWith("element_gun.css")) {
       if (flags.heart) text = flattenHeartCrosshair(text, flags.customHeadshot);
       text = `${text.trimEnd()}\n\n/* === mntbliss heart crosshair === */\n${heartOverride}\n`;
@@ -264,6 +283,7 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
         heart: flags.heart,
         customHit: flags.customHit,
         customHeadshot: flags.customHeadshot,
+        fireRate: flags.fireRate,
       }),
     );
     inputs.push(new CompileInput(gunDest));

@@ -1,0 +1,46 @@
+/* Compact glass stats strip. Sits above inventory. Values from config.json. */
+
+@define StatsMonitorColor: #FFFFFFCC;
+@define StatsMonitorBgColor: #0A0A0A80;
+
+.gShopOpen #hudPlayerStats
+{
+	visibility: collapse;
+}
+
+.miniModifier.isZero,
+.gDetailView .miniModifier.isZero,
+.gScoreboardOpen .miniModifier.isZero,
+.alwaysShowStats .miniModifier.isZero,
+.shouldShow.miniModifier.isZero
+{
+	visibility: collapse;
+	width: 0px;
+	opacity: 0;
+}
+
+.miniModifier.isBaseValue
+{
+	wash-color: none;
+	opacity: 0.72;
+}
+
+.miniModifier Label
+{
+	font-size: 13px;
+	font-weight: bold;
+	color: StatsMonitorColor;
+	vertical-align: middle;
+	text-shadow: 0px 0px 4px 2.0 #000000ee;
+}
+
+#casterList,
+.casterAndModifiers,
+#heroIcon,
+#modifierList,
+#abilityIcon
+{
+	visibility: collapse;
+	width: 0px;
+	opacity: 0;
+}

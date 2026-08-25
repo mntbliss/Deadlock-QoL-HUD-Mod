@@ -472,7 +472,7 @@ export function heartOverrideCss(
   heartCss: string,
   pulse: boolean,
   cfg: HudConfig,
-  opts: { heart: boolean; customHit: boolean; customHeadshot: boolean },
+  opts: { heart: boolean; customHit: boolean; customHeadshot: boolean; fireRate: boolean },
 ): string {
   let text = renderTemplate(heartCss, cfg);
 
@@ -480,6 +480,7 @@ export function heartOverrideCss(
   if (!opts.customHit) text = stripMarkedCss(text, "custom_hit");
   if (!opts.customHeadshot) text = stripMarkedCss(text, "custom_headshot");
   if (!opts.customHit && !opts.customHeadshot) text = stripMarkedCss(text, "custom_hit_shared");
+  if (!opts.fireRate) text = stripMarkedCss(text, "fire_rate");
 
   if (!pulse) return text;
   return `${text}
@@ -599,5 +600,119 @@ export function flattenSwapCorners(text: string): string {
       ["margin-left: 20px;", "margin-left: 0px;\n\tmargin-right: 20px;"],
     ]),
   );
+}
+
+/** Compact always-on stats strip next to inventory. First-property flatten. */
+export function flattenStatsMonitor(text: string, cfg: HudConfig, swapCorners: boolean): string {
+  const bg = cfg.get("stats_monitor_bg_color", "#0A0A0A80");
+  const tint = cfg.get("stats_monitor_color", "#FFFFFFCC");
+  const align = swapCorners ? "right" : "left";
+  const sideMargin = swapCorners
+    ? "margin-left: 0px;\n\tmargin-right: 16px;"
+    : "margin-left: 16px;\n\tmargin-right: 0px;";
+
+  text = replaceFirstRuleProps(
+    text,
+    "#hudPlayerStats",
+    props([
+      ["horizontal-align: left;", `horizontal-align: ${align};`],
+      ["flow-children: down;", "flow-children: right;"],
+      ["margin-bottom: 270px;", "margin-bottom: 140px;"],
+      ["width: 280px;", "width: fit-children;"],
+    ]),
+  );
+
+  text = injectIntoFirstRule(
+    text,
+    "#hudPlayerStats",
+    `height: fit-children;\n\tpadding: 4px 8px;\n\tbackground-color: ${bg};\n\tborder: 1px solid #FFFFFF18;\n\tborder-radius: 12px;\n\tworld-blur: ingameHudBlur;\n\t${sideMargin}`,
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".replay_playback #hudPlayerStats",
+    props([["margin-bottom: 220px;", "margin-bottom: 140px;"]]),
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    "CitadelHudActivePlayerStats",
+    props([
+      ["horizontal-align: right;", "horizontal-align: center;"],
+      ["vertical-align: bottom;", "vertical-align: center;"],
+      ["flow-children: left;", "flow-children: right;"],
+      ["width: 100%;", "width: fit-children;"],
+    ]),
+  );
+
+  text = injectIntoFirstRule(text, "CitadelHudActivePlayerStats", "height: fit-children;");
+
+  text = replaceFirstRuleProps(
+    text,
+    ".miniModifier",
+    props([
+      ["margin-bottom: 5px;", "margin-bottom: 0px;"],
+      ["height: 36px;", "height: 22px;"],
+      ["visibility: collapse;", "visibility: visible;"],
+      ["padding-left: 30px;", "padding-left: 0px;"],
+      ["margin-left: -10px;", "margin-left: 0px;"],
+    ]),
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".miniModifier.isZero,.miniModifier.isBaseValue",
+    props([["wash-color: grey;", "wash-color: none;"]]),
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".miniModifier.isNegative,.miniModifier.isNegative",
+    props([
+      ["animation-name: debuffApplied, positiveGleam;", "animation-name: none;"],
+      ["background-color: #FF565670;", "background-color: #00000000;"],
+      ["background-color: #FF565660;", "background-color: #00000000;"],
+    ]),
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".miniModifier.isPositive",
+    props([
+      ["animation-name: buffApplied, positiveGleam;", "animation-name: none;"],
+      [
+        "background-color: gradient( linear, 0% 0%, 0% 100%, from( #7FEEFF20 ), to( #7FEEFF30 ) );",
+        "background-color: #00000000;",
+      ],
+      ["background-color: offWhite&20;", "background-color: #00000000;"],
+    ]),
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".miniModifierCore",
+    props([["padding: 7px 10px;", "padding: 2px 4px;"]]),
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".statIcon",
+    props([
+      ["width: 18px;", "width: 14px;"],
+      ["height: 18px;", "height: 14px;"],
+      ["wash-color: offWhite;", `wash-color: ${tint};`],
+    ]),
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".statNumber",
+    props([
+      ["font-size: 17px;", "font-size: 13px;"],
+      ["color: offWhite;", `color: ${tint};`],
+    ]),
+  );
+
+  return injectIntoFirstRule(text, "#casterList", "visibility: collapse;\n\twidth: 0px;");
 }
 

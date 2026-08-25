@@ -22,6 +22,8 @@ const DEFAULTS: Record<string, string> = {
   use_custom_hit_animation: "true",
   use_custom_hit_headshot_animation: "true",
   use_clear_inventory: "true",
+  use_firerate_under_ammo: "true",
+  use_stats_monitor: "true",
   crosshair_color: "#FFFFFF",
   reload_crosshair_color: "#FF5A5A",
   low_hp_crosshair_color: "#E8A3AD",
@@ -63,6 +65,9 @@ const DEFAULTS: Record<string, string> = {
   minimap_scale: "100%",
   hit_animation_duration: "0.36s",
   hit_animation_speed: "1",
+  firerate_under_ammo_color: "#FFFFFF80",
+  stats_monitor_color: "#FFFFFFCC",
+  stats_monitor_bg_color: "#0A0A0A80",
 };
 
 export const HIDDEN_CONFIG_KEYS = new Set([
@@ -76,6 +81,8 @@ export const HIDDEN_CONFIG_KEYS = new Set([
   "use_custom_hit_animation",
   "use_custom_hit_headshot_animation",
   "use_clear_inventory",
+  "use_firerate_under_ammo",
+  "use_stats_monitor",
   "swap_minimap_inventory",
   "souls_margin_bottom",
   "souls_anchor_x",

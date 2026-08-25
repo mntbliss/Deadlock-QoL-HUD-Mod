@@ -6,6 +6,7 @@
 @define RegularHitHeartsColor: #FFFFFF;
 @define HeadshotSpikesColor: #FFFFFF;
 @define HeartSize: 36px;
+@define FireRateUnderAmmoColor: #FFFFFF80;
 
 /* === mntbliss:heart_reticle === */
 #mntbliss_heart_crosshair,
@@ -294,6 +295,7 @@
 }
 /* === /mntbliss:heart_reticle === */
 
+/* === mntbliss:fire_rate === */
 #mntbliss_fire_rate
 {
 	y: 104px;
@@ -301,7 +303,7 @@
 	horizontal-align: center;
 	flow-children: right;
 	visibility: collapse;
-	opacity: 0.85;
+	opacity: 1;
 	z-index: 40;
 }
 
@@ -316,14 +318,14 @@
 	height: 14px;
 	vertical-align: center;
 	margin-right: 4px;
-	wash-color: #ffffffcc;
+	wash-color: FireRateUnderAmmoColor;
 }
 
 .mntbliss_fire_rate_label
 {
 	font-size: 13px;
 	font-weight: bold;
-	color: #ffffffcc;
+	color: FireRateUnderAmmoColor;
 	vertical-align: center;
 	text-shadow: 0px 0px 4px 2.0 #000000ee;
 }
@@ -337,3 +339,4 @@
 	visibility: collapse;
 	opacity: 0;
 }
+/* === /mntbliss:fire_rate === */

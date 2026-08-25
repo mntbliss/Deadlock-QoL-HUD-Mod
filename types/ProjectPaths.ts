@@ -62,6 +62,10 @@ export class ProjectPaths {
     return path.join(this.root, "panorama", "styles", "hud_clear_inventory.css");
   }
 
+  get statsCss(): string {
+    return path.join(this.root, "panorama", "styles", "hud_stats_monitor.css");
+  }
+
   get compiler(): string {
     return path.join(this.csdk, "game", "bin_cs2", "win64", "resourcecompiler.exe");
   }

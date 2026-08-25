@@ -120,10 +120,11 @@ export function injectFireRateIntoGun(text: string): string {
 
 export function injectHeartsIntoGun(
   text: string,
-  opts: { heart: boolean; customHit: boolean; customHeadshot: boolean } = {
+  opts: { heart: boolean; customHit: boolean; customHeadshot: boolean; fireRate: boolean } = {
     heart: true,
     customHit: true,
     customHeadshot: true,
+    fireRate: true,
   },
 ): string {
   const needle = '<Citadel_AbilityHUDElement_Gun class="ability_element_gun">';
@@ -132,8 +133,8 @@ export function injectHeartsIntoGun(
     BuildError.fail("element_gun.xml is missing Citadel_AbilityHUDElement_Gun");
   }
 
-  text = injectGunHitScript(text);
-  text = injectFireRateIntoGun(text);
+  if (opts.customHit || opts.customHeadshot || opts.fireRate) text = injectGunHitScript(text);
+  if (opts.fireRate) text = injectFireRateIntoGun(text);
 
   const images: string[] = [];
 
