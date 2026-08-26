@@ -84,6 +84,105 @@
     return hasClass(panel, "shouldShow");
   }
 
+  function markEmpty(panel, empty) {
+    if (!valid(panel)) return;
+
+    try {
+      if (empty) panel.AddClass("mntbliss_empty_slot");
+      else panel.RemoveClass("mntbliss_empty_slot");
+    } catch (_err) {}
+  }
+
+  function iconIsShown(img) {
+    if (!valid(img)) return false;
+
+    if (hasClass(img, "BrokenImage") || hasClass(img, "Hidden") || hasClass(img, "hidden")) {
+      return false;
+    }
+
+    try {
+      if (img.visible === false) return false;
+    } catch (_err) {}
+
+    try {
+      var vis = String(img.style.visibility || "");
+      if (vis === "collapse" || vis === "hidden") return false;
+    } catch (_err) {}
+
+    return true;
+  }
+
+  function tidyEmptyIcons(modifier) {
+    var list = null;
+
+    try {
+      list = modifier.FindChildTraverse("casterList");
+    } catch (_err) {
+      return;
+    }
+
+    if (!valid(list)) return;
+
+    var chips = 0;
+
+    try {
+      chips = list.GetChildCount();
+    } catch (_err) {
+      return;
+    }
+
+    for (var i = 0; i < chips; i++) {
+      var chip = list.GetChild(i);
+
+      if (!hasClass(chip, "casterAndModifiers")) continue;
+
+      var shown = 0;
+      var hero = null;
+      var bonus = null;
+      var mods = null;
+
+      try {
+        hero = chip.FindChildTraverse("heroIcon");
+        bonus = chip.FindChildTraverse("bonusIcon");
+        mods = chip.FindChildTraverse("modifierList");
+      } catch (_err) {}
+
+      markEmpty(bonus, true);
+
+      if (valid(hero)) {
+        var heroOn = iconIsShown(hero);
+        markEmpty(hero, !heroOn);
+        if (heroOn) shown += 1;
+      }
+
+      if (valid(mods)) {
+        var n = 0;
+
+        try {
+          n = mods.GetChildCount();
+        } catch (_err) {
+          n = 0;
+        }
+
+        for (var j = 0; j < n; j++) {
+          var row = mods.GetChild(j);
+          var ability = null;
+
+          try {
+            ability = row.FindChildTraverse("abilityIcon");
+          } catch (_err) {}
+
+          var art = iconIsShown(ability);
+          markEmpty(ability, !art);
+          markEmpty(row, !art);
+          if (art) shown += 1;
+        }
+      }
+
+      markEmpty(chip, shown === 0);
+    }
+  }
+
   function tick() {
     if (!valid(stats)) return;
 
@@ -116,6 +215,7 @@
       } else if (shouldShowModifier(child, detail)) {
         child.RemoveClass("mntbliss_stat_hidden");
         child.RemoveClass("mntbliss_stat_ghost");
+        tidyEmptyIcons(child);
       } else {
         child.AddClass("mntbliss_stat_hidden");
         child.RemoveClass("mntbliss_stat_ghost");

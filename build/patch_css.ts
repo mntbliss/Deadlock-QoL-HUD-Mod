@@ -694,18 +694,29 @@ export function flattenStatsMonitor(text: string, cfg: HudConfig, swapCorners: b
     text,
     "#heroIcon",
     props([
-      ["width: 36px;", "width: 22px;"],
-      ["height: 36px;", "height: 22px;"],
+      ["width: 36px;", "width: fit-children;"],
+      ["height: 36px;", "height: fit-children;"],
     ]),
+  );
+  text = injectIntoFirstRule(
+    text,
+    "#heroIcon",
+    "min-width: 0px;\n\tmin-height: 0px;\n\tmax-width: 22px;\n\tmax-height: 22px;",
   );
 
   text = replaceFirstRuleProps(
     text,
     "#abilityIcon",
     props([
-      ["width: 20px;", "width: 22px;"],
-      ["height: 20px;", "height: 22px;"],
+      ["width: 20px;", "width: fit-children;"],
+      ["height: 20px;", "height: fit-children;"],
+      ["margin: 0px 2px;", "margin: 0px;"],
     ]),
+  );
+  text = injectIntoFirstRule(
+    text,
+    "#abilityIcon",
+    "min-width: 0px;\n\tmin-height: 0px;\n\tmax-width: 22px;\n\tmax-height: 22px;\n\tmargin-left: 2px;",
   );
 
   text = replaceFirstRuleProps(

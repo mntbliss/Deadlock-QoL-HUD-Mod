@@ -99,13 +99,38 @@
 #heroIcon,
 #abilityIcon
 {
-	visibility: visible;
-	width: 22px;
-	height: 22px;
+	width: fit-children;
+	height: fit-children;
+	min-width: 0px;
+	min-height: 0px;
+	max-width: 22px;
+	max-height: 22px;
 	vertical-align: middle;
 	margin-left: 2px;
 	margin-right: 0px;
 	opacity: 0.95;
+}
+
+#heroIcon.BrokenImage,
+#abilityIcon.BrokenImage,
+#heroIcon.Hidden,
+#abilityIcon.Hidden,
+#heroIcon.mntbliss_empty_slot,
+#abilityIcon.mntbliss_empty_slot,
+.singleModifier.mntbliss_empty_slot,
+.casterAndModifiers.mntbliss_empty_slot
+{
+	visibility: collapse;
+	ignore-parent-flow: true;
+	width: 0px;
+	height: 0px;
+	min-width: 0px;
+	min-height: 0px;
+	max-width: 0px;
+	max-height: 0px;
+	margin: 0px;
+	padding: 0px;
+	opacity: 0;
 }
 
 #modifierList
