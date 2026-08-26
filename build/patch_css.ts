@@ -197,6 +197,27 @@ export function flattenPlayerHealthbar(text: string, cfg: HudConfig): string {
 
   text = replaceFirstRuleProps(
     text,
+    "#RejuvenatorContainer",
+    props([
+      ["visibility: collapse;", "visibility: collapse;"],
+      ["width: 38px;", "width: 0px;"],
+      ["width: 40px;", "width: 0px;"],
+      ["height: 40px;", "height: 0px;"],
+    ]),
+  );
+  text = injectIntoFirstRule(
+    text,
+    "#RejuvenatorContainer",
+    "ignore-parent-flow: true;\n\twidth: 0px;\n\theight: 0px;\n\tmargin: 0px;",
+  );
+  text = injectIntoFirstRule(
+    text,
+    ".HasRejuvenator #RejuvenatorContainer",
+    "visibility: collapse;\n\twidth: 0px;\n\theight: 0px;",
+  );
+
+  text = replaceFirstRuleProps(
+    text,
     "#shield_bar,#tech_shield_bar",
     props([
       ["horizontal-align: right;", "horizontal-align: center;"],
@@ -353,13 +374,25 @@ export function flattenClearInventory(text: string, cfg: HudConfig, moveLevel: b
     text = injectIntoFirstRule(text, "#ToNextPanel", "visibility: collapse;");
   }
 
-  return replaceFirstRuleProps(
+  text = replaceFirstRuleProps(
+    text,
+    "#HealthBarContent #StatusEffectContainer",
+    props([["flow-children: down;", "flow-children: right;"]]),
+  );
+
+  text = replaceFirstRuleProps(
     text,
     "#HealthBarContent CitadelStatusEffect",
     props([
-      ["margin-top: 90px;", "margin-top: 4px;"],
+      ["margin-top: 90px;", "margin-top: 0px;"],
       ["margin-right: 110px;", "margin-right: 0px;"],
     ]),
+  );
+
+  return injectIntoFirstRule(
+    text,
+    "#HealthBarContent CitadelStatusEffect",
+    "ignore-parent-flow: true;\n\twidth: fit-children;\n\theight: fit-children;",
   );
 }
 

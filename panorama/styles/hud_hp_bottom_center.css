@@ -16,6 +16,8 @@
 @define HealthbarHealColor: #77DB77CC;
 @define HealthbarNumberOffsetY: -30px;
 @define HealthbarShieldY: 24px;
+@define BuffsOffsetX: 0px;
+@define BuffsOffsetY: 0px;
 
 #health_and_abilities_container
 {
@@ -510,12 +512,39 @@ CitadelHudShieldsContainer
 	vertical-align: center;
 }
 
+#HealthBarContent CitadelStatusEffect,
 #HealthBarContent #StatusEffects
 {
-	vertical-align: top;
+	ignore-parent-flow: true;
 	horizontal-align: center;
-	margin-top: 4px;
-	margin-right: 0px;
+	vertical-align: bottom;
+	width: fit-children;
+	height: fit-children;
+	margin: 0px;
+	x: BuffsOffsetX;
+	y: BuffsOffsetY;
+	z-index: 80;
+}
+
+#HealthBarContent #StatusEffectContainer
+{
+	flow-children: right;
+	width: fit-children;
+	height: fit-children;
+	horizontal-align: center;
+	vertical-align: bottom;
+}
+
+#RejuvenatorContainer,
+.HasRejuvenator #RejuvenatorContainer,
+.healthLow #RejuvenatorContainer
+{
+	visibility: collapse;
+	ignore-parent-flow: true;
+	width: 0px;
+	height: 0px;
+	margin: 0px;
+	padding: 0px;
 }
 
 #hud_held

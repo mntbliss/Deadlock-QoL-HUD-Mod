@@ -16,6 +16,7 @@ export class PanoramaDefine {
 
     if (this.name === "MinimapScale") return value.asUiScale();
     if (this.name === "HeartSize" || this.name === "CrosshairCenterDotSize") return value.asPx();
+    if (this.name === "BuffsOffsetX" || this.name === "BuffsOffsetY") return value.asSignedPx();
     if (this.name === "InventorySlotsOpacityIdle") return value.asOpacity();
 
     return raw;
@@ -56,6 +57,8 @@ export class PanoramaDefine {
       new PanoramaDefine("HealthbarHealColor", "heal_color"),
       new PanoramaDefine("HealthbarNumberOffsetY", "number_offset_y"),
       new PanoramaDefine("HealthbarShieldY", "shield_y"),
+      new PanoramaDefine("BuffsOffsetX", "buffs_offset_x"),
+      new PanoramaDefine("BuffsOffsetY", "buffs_offset_y"),
     ];
   }
 }

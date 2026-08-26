@@ -72,6 +72,8 @@ const DEFAULTS: Record<string, string> = {
   level_offset_x: "20px",
   side_offset_y: "20px",
   shield_gap: "4px",
+  buffs_offset_x: "0px",
+  buffs_offset_y: "0px",
   swap_minimap_inventory: "false",
   inventory_slots_opacity_idle: "40%",
   minion_scale: "300%",
