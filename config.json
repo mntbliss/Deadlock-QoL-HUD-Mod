@@ -10,11 +10,11 @@
   "use_custom_hit_animation": true,
   "use_custom_hit_headshot_animation": true,
   "use_clear_inventory": true,
-  "use_firerate_under_ammo": true,
   "use_stats_monitor": true,
   "swap_minimap_inventory": true,
 
   "crosshair_color": "#bd9cff",
+  "crosshair_center_dot_size": "2px",
   "reload_crosshair_color": "#FF5A5A",
   "low_hp_crosshair_color": "#E8A3AD",
   "regular_hit_hearts_color": "#bd9cff",
@@ -22,7 +22,6 @@
   "heart_size": "36px",
   "hit_animation_duration": "0.36s",
   "hit_animation_speed": "1",
-  "firerate_under_ammo_color": "#bd9cff80",
   "stats_monitor_color": "#bd9cffcc",
   "stats_monitor_bg_color": "#0A0A0A80",
 

@@ -77,6 +77,22 @@ export function injectUnsecuredSoulsChip(text: string): string {
   );
 }
 
+export function injectStatsMonitorScript(text: string): string {
+  if (text.includes("mntbliss_stats_monitor.vjs_c")) return text;
+
+  if (!text.includes("</styles>")) {
+    BuildError.fail("citadel_hud_active_player_stats.xml is missing </styles>");
+  }
+
+  return text.replace(
+    "</styles>",
+    `</styles>
+	<scripts>
+		<include src="s2r://panorama/scripts/mntbliss_stats_monitor.vjs_c" />
+	</scripts>`,
+  );
+}
+
 export function injectGunHitScript(text: string): string {
   if (text.includes("mntbliss_hit_fx.vjs_c")) return text;
 
@@ -93,38 +109,21 @@ export function injectGunHitScript(text: string): string {
   );
 }
 
-export function injectFireRateIntoGun(text: string): string {
-  if (!text.includes('id="mntbliss_weapon_ammo"')) {
-    text = text.replace(
-      /<Label class="weapon_ammo" text="\{i:current_clip_ammo\}" \/>/,
-      '<Label id="mntbliss_weapon_ammo" class="weapon_ammo" text="{i:current_clip_ammo}" />',
-    );
-  }
+export function injectWeaponAmmoId(text: string): string {
+  if (text.includes('id="mntbliss_weapon_ammo"')) return text;
 
-  if (text.includes('id="mntbliss_fire_rate"')) return text;
-
-  const rate = `<Panel id="mntbliss_fire_rate" class="mntbliss_fire_rate">
-				<Image class="mntbliss_fire_rate_icon" src="s2r://panorama/images/icons/properties/fire_rate.vsvg" />
-				<Label id="mntbliss_fire_rate_label" class="mntbliss_fire_rate_label" text="" />
-			</Panel>`;
-
-  const next = text.replace(/(<Panel id="ammo_panel">[\s\S]*?<\/Panel>)/, `$1\n\t\t\t${rate}`);
-
-  if (next === text) {
-    Log.warn("⚠️", "could not inject fire rate under ammo");
-    return text;
-  }
-
-  return next;
+  return text.replace(
+    /<Label class="weapon_ammo" text="\{i:current_clip_ammo\}" \/>/,
+    '<Label id="mntbliss_weapon_ammo" class="weapon_ammo" text="{i:current_clip_ammo}" />',
+  );
 }
 
 export function injectHeartsIntoGun(
   text: string,
-  opts: { heart: boolean; customHit: boolean; customHeadshot: boolean; fireRate: boolean } = {
+  opts: { heart: boolean; customHit: boolean; customHeadshot: boolean } = {
     heart: true,
     customHit: true,
     customHeadshot: true,
-    fireRate: true,
   },
 ): string {
   const needle = '<Citadel_AbilityHUDElement_Gun class="ability_element_gun">';
@@ -133,8 +132,10 @@ export function injectHeartsIntoGun(
     BuildError.fail("element_gun.xml is missing Citadel_AbilityHUDElement_Gun");
   }
 
-  if (opts.customHit || opts.customHeadshot || opts.fireRate) text = injectGunHitScript(text);
-  if (opts.fireRate) text = injectFireRateIntoGun(text);
+  if (opts.customHit || opts.customHeadshot) {
+    text = injectGunHitScript(text);
+    text = injectWeaponAmmoId(text);
+  }
 
   const images: string[] = [];
 

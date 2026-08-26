@@ -403,7 +403,7 @@ export function flattenClearInventory(text: string, cfg: HudConfig, moveLevel: b
   );
 }
 
-export function flattenHeartCrosshair(text: string, hideVanillaCrit = true): string {
+export function flattenHeartCrosshair(text: string, hideVanillaCrit = true, dotSize = "2px"): string {
   text = replaceFirstRuleProps(
     text,
     ".crosshair__dotborder",
@@ -416,6 +416,20 @@ export function flattenHeartCrosshair(text: string, hideVanillaCrit = true): str
   );
 
   text = injectIntoFirstRule(text, ".crosshair__dotborder", "visibility: collapse;");
+
+  text = replaceFirstRuleProps(
+    text,
+    ".crosshair__dot",
+    props([
+      ["width: 2px;", `width: ${dotSize};`],
+      ["height: 2px;", `height: ${dotSize};`],
+    ]),
+  );
+  text = injectIntoFirstRule(
+    text,
+    ".crosshair__dot",
+    `min-width: ${dotSize};\n\tmin-height: ${dotSize};\n\tmax-width: ${dotSize};\n\tmax-height: ${dotSize};`,
+  );
 
   text = replaceFirstRuleProps(
     text,
@@ -472,7 +486,7 @@ export function heartOverrideCss(
   heartCss: string,
   pulse: boolean,
   cfg: HudConfig,
-  opts: { heart: boolean; customHit: boolean; customHeadshot: boolean; fireRate: boolean },
+  opts: { heart: boolean; customHit: boolean; customHeadshot: boolean },
 ): string {
   let text = renderTemplate(heartCss, cfg);
 
@@ -480,7 +494,6 @@ export function heartOverrideCss(
   if (!opts.customHit) text = stripMarkedCss(text, "custom_hit");
   if (!opts.customHeadshot) text = stripMarkedCss(text, "custom_headshot");
   if (!opts.customHit && !opts.customHeadshot) text = stripMarkedCss(text, "custom_hit_shared");
-  if (!opts.fireRate) text = stripMarkedCss(text, "fire_rate");
 
   if (!pulse) return text;
   return `${text}
@@ -616,7 +629,7 @@ export function flattenStatsMonitor(text: string, cfg: HudConfig, swapCorners: b
     "#hudPlayerStats",
     props([
       ["horizontal-align: left;", `horizontal-align: ${align};`],
-      ["flow-children: down;", "flow-children: right;"],
+      ["flow-children: down;", "flow-children: right-wrap;"],
       ["margin-bottom: 270px;", "margin-bottom: 140px;"],
       ["width: 280px;", "width: fit-children;"],
     ]),
@@ -625,7 +638,7 @@ export function flattenStatsMonitor(text: string, cfg: HudConfig, swapCorners: b
   text = injectIntoFirstRule(
     text,
     "#hudPlayerStats",
-    `height: fit-children;\n\tpadding: 4px 8px;\n\tbackground-color: ${bg};\n\tborder: 1px solid #FFFFFF18;\n\tborder-radius: 12px;\n\tworld-blur: ingameHudBlur;\n\t${sideMargin}`,
+    `height: fit-children;\n\tmax-width: 380px;\n\tpadding: 0px;\n\tbackground-color: #00000000;\n\tborder: 0px solid #00000000;\n\tui-scale: 110%;\n\t${sideMargin}`,
   );
 
   text = replaceFirstRuleProps(
@@ -639,13 +652,16 @@ export function flattenStatsMonitor(text: string, cfg: HudConfig, swapCorners: b
     "CitadelHudActivePlayerStats",
     props([
       ["horizontal-align: right;", "horizontal-align: center;"],
-      ["vertical-align: bottom;", "vertical-align: center;"],
-      ["flow-children: left;", "flow-children: right;"],
+      ["flow-children: left;", "flow-children: right-wrap;"],
       ["width: 100%;", "width: fit-children;"],
     ]),
   );
 
-  text = injectIntoFirstRule(text, "CitadelHudActivePlayerStats", "height: fit-children;");
+  text = injectIntoFirstRule(
+    text,
+    "CitadelHudActivePlayerStats",
+    `height: fit-children;\n\tmax-width: 380px;\n\tpadding: 0px;\n\tbackground-color: ${bg};\n\tborder-radius: 12px;\n\toverflow: noclip;\n\tworld-blur: ingameHudBlur;`,
+  );
 
   text = replaceFirstRuleProps(
     text,
@@ -653,9 +669,8 @@ export function flattenStatsMonitor(text: string, cfg: HudConfig, swapCorners: b
     props([
       ["margin-bottom: 5px;", "margin-bottom: 0px;"],
       ["height: 36px;", "height: 22px;"],
-      ["visibility: collapse;", "visibility: visible;"],
-      ["padding-left: 30px;", "padding-left: 0px;"],
-      ["margin-left: -10px;", "margin-left: 0px;"],
+      ["padding-left: 30px;", "padding: 0px;"],
+      ["margin-left: -10px;", "margin-left: 0px;\n\tmargin-right: 3px;"],
     ]),
   );
 
@@ -691,15 +706,17 @@ export function flattenStatsMonitor(text: string, cfg: HudConfig, swapCorners: b
   text = replaceFirstRuleProps(
     text,
     ".miniModifierCore",
-    props([["padding: 7px 10px;", "padding: 2px 4px;"]]),
+    props([["padding: 7px 10px;", "padding: 0px 2px;"]]),
   );
+
+  text = injectIntoFirstRule(text, ".miniModifierCore", "vertical-align: middle;\n\toverflow: noclip;");
 
   text = replaceFirstRuleProps(
     text,
     ".statIcon",
     props([
-      ["width: 18px;", "width: 14px;"],
-      ["height: 18px;", "height: 14px;"],
+      ["width: 18px;", "width: 22px;"],
+      ["height: 18px;", "height: 22px;"],
       ["wash-color: offWhite;", `wash-color: ${tint};`],
     ]),
   );
@@ -708,11 +725,88 @@ export function flattenStatsMonitor(text: string, cfg: HudConfig, swapCorners: b
     text,
     ".statNumber",
     props([
-      ["font-size: 17px;", "font-size: 13px;"],
+      ["font-size: 17px;", "font-size: 16px;"],
       ["color: offWhite;", `color: ${tint};`],
     ]),
   );
 
-  return injectIntoFirstRule(text, "#casterList", "visibility: collapse;\n\twidth: 0px;");
+  text = replaceFirstRuleProps(
+    text,
+    "#heroIcon",
+    props([
+      ["width: 36px;", "width: 22px;"],
+      ["height: 36px;", "height: 22px;"],
+    ]),
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    "#abilityIcon",
+    props([
+      ["width: 20px;", "width: 22px;"],
+      ["height: 20px;", "height: 22px;"],
+    ]),
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".casterAndModifiers",
+    props([
+      ["height: 100%;", "height: 22px;"],
+      ["padding-right: 4px;", "padding: 0px;"],
+    ]),
+  );
+
+  text = injectIntoFirstRule(
+    text,
+    ".casterAndModifiers",
+    "width: fit-children;\n\tborder-radius: 0px;\n\tbackground-color: #00000000;\n\tmargin-left: 2px;\n\tvertical-align: middle;",
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".casterAndModifiers.friend",
+    props([["background-color: #00000060;", "background-color: #00000000;"]]),
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".casterAndModifiers.enemy",
+    props([["background-color: #00000050;", "background-color: #00000000;"]]),
+  );
+
+  text = injectIntoFirstRule(
+    text,
+    ".miniModifier",
+    "width: fit-children;\n\theight: 22px;\n\tmargin-top: 0px;\n\tmargin-bottom: 0px;\n\tpadding: 0px;\n\tvertical-align: top;\n\tbackground-color: #000000AA;\n\tborder-radius: 10px;",
+  );
+  text = injectIntoFirstRule(text, ".statIcon", "vertical-align: middle;\n\tmargin-top: 0px;\n\tmargin-bottom: 0px;");
+  text = injectIntoFirstRule(
+    text,
+    ".speedDisplayInner",
+    "padding: 0px;\n\tbackground-color: #00000000;",
+  );
+  text = replaceFirstRuleProps(
+    text,
+    ".speedDisplayInner",
+    props([["padding: 8px;", "padding: 0px;"]]),
+  );
+  text = replaceFirstRuleProps(
+    text,
+    ".statPostfix",
+    props([["padding-top: 2px;", "padding-top: 0px;"]]),
+  );
+  text = replaceFirstRuleProps(
+    text,
+    "#speedDisplayPostfix.statPostfix",
+    props([["padding-top: 4px;", "padding-top: 0px;"]]),
+  );
+  text = injectIntoFirstRule(
+    text,
+    "#bonusIcon",
+    "visibility: collapse;\n\twidth: 0px;\n\theight: 0px;",
+  );
+
+  return injectIntoFirstRule(text, "#casterList", "width: fit-children;\n\theight: 22px;\n\tmargin-left: 2px;");
 }
 

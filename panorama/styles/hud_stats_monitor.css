@@ -1,4 +1,6 @@
-/* Compact glass stats strip. Sits above inventory. Values from config.json. */
+/* Compact glass stats strip. Same width as inventory, wraps extra stats down.
+ * Each .miniModifier is one rounded cell: stat + sources together.
+ */
 
 @define StatsMonitorColor: #FFFFFFCC;
 @define StatsMonitorBgColor: #0A0A0A80;
@@ -8,39 +10,167 @@
 	visibility: collapse;
 }
 
+.miniModifier.mntbliss_stat_hidden,
+.gDetailView .miniModifier.mntbliss_stat_hidden,
+.gScoreboardOpen .miniModifier.mntbliss_stat_hidden,
+.alwaysShowStats .miniModifier.mntbliss_stat_hidden,
+.shouldShow.miniModifier.mntbliss_stat_hidden,
 .miniModifier.isZero,
 .gDetailView .miniModifier.isZero,
-.gScoreboardOpen .miniModifier.isZero,
-.alwaysShowStats .miniModifier.isZero,
-.shouldShow.miniModifier.isZero
+.gScoreboardOpen .miniModifier.isZero
 {
 	visibility: collapse;
 	width: 0px;
+	height: 0px;
 	opacity: 0;
+	margin: 0px;
+	padding: 0px;
 }
 
-.miniModifier.isBaseValue
+#speedDisplayContainer.miniModifier.isZero,
+#speedDisplayContainer.miniModifier.mntbliss_stat_ghost,
+#speedDisplayContainer.miniModifier.mntbliss_stat_hidden
 {
-	wash-color: none;
-	opacity: 0.72;
+	visibility: visible;
+	opacity: 0;
+	width: 0px;
+	height: 0px;
+	margin: 0px;
+	padding: 0px;
+	overflow: clip;
 }
 
 .miniModifier Label
 {
-	font-size: 13px;
+	font-size: 16px;
 	font-weight: bold;
 	color: StatsMonitorColor;
 	vertical-align: middle;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-right: 2px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	margin-right: 0px;
+	width: fit-children;
 	text-shadow: 0px 0px 4px 2.0 #000000ee;
 }
 
-#casterList,
+#casterList
+{
+	visibility: visible;
+	width: fit-children;
+	height: 22px;
+	flow-children: right;
+	vertical-align: middle;
+	margin-left: 2px;
+	padding: 0px;
+}
+
 .casterAndModifiers,
-#heroIcon,
-#modifierList,
-#abilityIcon
+.casterAndModifiers.friend,
+.casterAndModifiers.enemy
+{
+	flow-children: right;
+	width: fit-children;
+	height: 22px;
+	padding: 0px;
+	margin-left: 0px;
+	vertical-align: middle;
+	background-color: #00000000;
+	border-radius: 0px;
+}
+
+#bonusIcon
 {
 	visibility: collapse;
 	width: 0px;
+	height: 0px;
+	margin: 0px;
 	opacity: 0;
+}
+
+#heroIcon,
+#abilityIcon
+{
+	visibility: visible;
+	width: 22px;
+	height: 22px;
+	vertical-align: middle;
+	margin-left: 2px;
+	margin-right: 0px;
+	opacity: 0.95;
+}
+
+#modifierList
+{
+	flow-children: right;
+	vertical-align: middle;
+}
+
+CitadelHudActivePlayerStats GlobalClassListener
+{
+	width: 0px;
+	height: 0px;
+	margin: 0px;
+	padding: 0px;
+}
+
+.miniModifierCore
+{
+	vertical-align: middle;
+	height: 22px;
+	padding: 0px 2px;
+}
+
+.statIcon
+{
+	vertical-align: middle;
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.statPostfix,
+#speedDisplayPostfix.statPostfix,
+#speedDisplayMS
+{
+	padding-top: 0px;
+	padding-bottom: 0px;
+	vertical-align: middle;
+}
+
+CitadelHudActivePlayerStats #MovementSpeed,
+CitadelHudActivePlayerStats #BaseMovementSpeedPanel,
+#speedDisplayContainer #MovementSpeed,
+#speedDisplayContainer .speedDisplayInner
+{
+	visibility: collapse;
+	width: 0px;
+	height: 0px;
+	padding: 0px;
+	margin: 0px;
+	background-color: #00000000;
+}
+
+#speedDisplayContainer.miniModifier
+{
+	visibility: visible;
+	width: fit-children;
+	height: 22px;
+	opacity: 1;
+}
+
+CitadelHudActivePlayerStats
+{
+	padding: 0px;
+	overflow: noclip;
+}
+
+.miniModifier
+{
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 0px;
+	height: 22px;
+	vertical-align: top;
 }

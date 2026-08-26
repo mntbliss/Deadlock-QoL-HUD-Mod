@@ -9,7 +9,17 @@ const ALIASES: Record<string, string> = {
   relload_crosshair_color: "reload_crosshair_color",
 };
 
-const STALE = ["minion_bar_scale", "level_hp_margin", "level_offset_y", "souls_offset_y", "headshot_color"];
+const STALE = [
+  "minion_bar_scale",
+  "level_hp_margin",
+  "level_offset_y",
+  "souls_offset_y",
+  "headshot_color",
+  "use_firerate_under_ammo",
+  "firerate_under_ammo_color",
+  "use_move_speed_below_ammo",
+  "move_speed_below_ammo_color",
+];
 
 const DEFAULTS: Record<string, string> = {
   author: "mntbliss",
@@ -22,7 +32,6 @@ const DEFAULTS: Record<string, string> = {
   use_custom_hit_animation: "true",
   use_custom_hit_headshot_animation: "true",
   use_clear_inventory: "true",
-  use_firerate_under_ammo: "true",
   use_stats_monitor: "true",
   crosshair_color: "#FFFFFF",
   reload_crosshair_color: "#FF5A5A",
@@ -30,6 +39,7 @@ const DEFAULTS: Record<string, string> = {
   regular_hit_hearts_color: "#FFFFFF",
   headshot_spikes_color: "#FFFFFF",
   heart_size: "36px",
+  crosshair_center_dot_size: "4px",
   fill_color: "#e2ffde",
   fill_low_color: "#FF5A5A",
   fill_mid_color: "#E8FF5A",
@@ -65,7 +75,6 @@ const DEFAULTS: Record<string, string> = {
   minimap_scale: "100%",
   hit_animation_duration: "0.36s",
   hit_animation_speed: "1",
-  firerate_under_ammo_color: "#FFFFFF80",
   stats_monitor_color: "#FFFFFFCC",
   stats_monitor_bg_color: "#0A0A0A80",
 };
@@ -81,7 +90,6 @@ export const HIDDEN_CONFIG_KEYS = new Set([
   "use_custom_hit_animation",
   "use_custom_hit_headshot_animation",
   "use_clear_inventory",
-  "use_firerate_under_ammo",
   "use_stats_monitor",
   "swap_minimap_inventory",
   "souls_margin_bottom",

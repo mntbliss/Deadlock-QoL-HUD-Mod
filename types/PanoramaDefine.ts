@@ -15,7 +15,7 @@ export class PanoramaDefine {
     const value = new CssValue(raw);
 
     if (this.name === "MinimapScale" || this.name === "MinionUiScale") return value.asUiScale();
-    if (this.name === "HeartSize") return value.asPx();
+    if (this.name === "HeartSize" || this.name === "CrosshairCenterDotSize") return value.asPx();
     if (this.name === "InventorySlotsOpacityIdle") return value.asOpacity();
 
     return raw;
@@ -39,7 +39,7 @@ export class PanoramaDefine {
       new PanoramaDefine("RegularHitHeartsColor", "regular_hit_hearts_color"),
       new PanoramaDefine("HeadshotSpikesColor", "headshot_spikes_color"),
       new PanoramaDefine("HeartSize", "heart_size"),
-      new PanoramaDefine("FireRateUnderAmmoColor", "firerate_under_ammo_color"),
+      new PanoramaDefine("CrosshairCenterDotSize", "crosshair_center_dot_size"),
       new PanoramaDefine("StatsMonitorColor", "stats_monitor_color"),
       new PanoramaDefine("StatsMonitorBgColor", "stats_monitor_bg_color"),
       new PanoramaDefine("InventorySlotsOpacityIdle", "inventory_slots_opacity_idle"),

@@ -27,6 +27,7 @@ import {
   injectHeartsIntoGun,
   injectLowhpListener,
   injectMinionHpLabel,
+  injectStatsMonitorScript,
   injectUnsecuredSoulsChip,
 } from "./patch_xml.ts";
 import {
@@ -82,7 +83,6 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
     flags.heart && "heart",
     flags.customHit && "hit",
     flags.customHeadshot && "headshot",
-    flags.fireRate && "firerate",
     flags.statsMonitor && "stats",
     flags.inventory && "inventory",
     flags.swapCorners && "corners",
@@ -102,7 +102,6 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
         heart: flags.heart,
         customHit: flags.customHit,
         customHeadshot: flags.customHeadshot,
-        fireRate: flags.fireRate,
       })
     : "";
   const statsOverride = flags.statsMonitor ? renderTemplate(paths.statsCss, cfg) : "";
@@ -177,7 +176,13 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
         text = `${text.trimEnd()}\n\n/* === mntbliss minimap override === */\n${minimapOverride}\n`;
       }
       if (flags.gunHud) {
-        if (flags.heart) text = flattenHeartCrosshair(text, flags.customHeadshot);
+        if (flags.heart) {
+          text = flattenHeartCrosshair(
+            text,
+            flags.customHeadshot,
+            cfg.css("crosshair_center_dot_size", "4px").asPx(),
+          );
+        }
         text = `${text.trimEnd()}\n\n/* === mntbliss heart crosshair === */\n${heartOverride}\n`;
       }
       if (flags.inventory) {
@@ -196,7 +201,13 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
       text = flattenStatsMonitor(text, cfg, flags.swapCorners);
       text = `${text.trimEnd()}\n\n/* === mntbliss stats monitor === */\n${statsOverride}\n`;
     } else if (name.endsWith("element_gun.css")) {
-      if (flags.heart) text = flattenHeartCrosshair(text, flags.customHeadshot);
+      if (flags.heart) {
+        text = flattenHeartCrosshair(
+          text,
+          flags.customHeadshot,
+          cfg.css("crosshair_center_dot_size", "4px").asPx(),
+        );
+      }
       text = `${text.trimEnd()}\n\n/* === mntbliss heart crosshair === */\n${heartOverride}\n`;
     } else if (
       name === "hud_gold_and_ap_container.css" ||
@@ -270,6 +281,25 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
     inputs.push(new CompileInput(dest));
   }
 
+  if (flags.statsMonitor) {
+    const statsSrc = path.join(paths.extract, "layout", "citadel_hud_active_player_stats.xml");
+
+    if (!fs.existsSync(statsSrc)) BuildError.fail(`Missing extracted layout: ${statsSrc}`);
+
+    const statsDest = path.join(paths.content, "panorama", "layout", "citadel_hud_active_player_stats.xml");
+    const statsJsSrc = path.join(paths.root, "panorama", "scripts", "mntbliss_stats_monitor.js");
+
+    if (!fs.existsSync(statsJsSrc)) BuildError.fail(`Missing stats monitor script: ${statsJsSrc}`);
+
+    writeNl(statsDest, injectStatsMonitorScript(stripViewerNoise(fs.readFileSync(statsSrc, "utf8"))));
+    inputs.push(new CompileInput(statsDest));
+
+    const statsJsDest = path.join(paths.content, "panorama", "scripts", "mntbliss_stats_monitor.js");
+
+    writeNl(statsJsDest, fs.readFileSync(statsJsSrc, "utf8"));
+    inputs.push(new CompileInput(statsJsDest));
+  }
+
   if (flags.gunHud) {
     const gunSrc = path.join(paths.extract, "layout", "ability_hud_elements", "element_gun.xml");
 
@@ -283,7 +313,6 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
         heart: flags.heart,
         customHit: flags.customHit,
         customHeadshot: flags.customHeadshot,
-        fireRate: flags.fireRate,
       }),
     );
     inputs.push(new CompileInput(gunDest));
