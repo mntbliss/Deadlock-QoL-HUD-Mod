@@ -6,13 +6,7 @@ export const PLAYER_STYLE_BASES = [
   "hud_health_stacked.css",
 ];
 
-export const UNIT_STYLE_BASES = [
-  "citadel_base_styles.css",
-  "unit_status_icons.css",
-  "unit_status.css",
-  "unit_status_v2.css",
-  "unit_status_old.css",
-];
+export const UNIT_STYLE_BASES = ["unit_status.css", "unit_status_v2.css", "unit_status_old.css"];
 
 export const PLAYER_LAYOUT_BASES = [
   "hud_health.xml",
@@ -28,5 +22,3 @@ export const UNIT_LAYOUT_BASES = [
 ];
 
 export const UNIT_STYLE_NAMES = new Set(["unit_status.css", "unit_status_v2.css", "unit_status_old.css"]);
-
-export const UNIT_INJECT_STYLES = new Set(["citadel_base_styles.css", "unit_status_icons.css"]);

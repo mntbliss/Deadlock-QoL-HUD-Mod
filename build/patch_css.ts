@@ -7,31 +7,13 @@ function props(pairs: Array<[string, string]>): CssReplacement[] {
 }
 
 export function flattenUnitHealthbars(text: string): string {
-  const uiScale = "300%";
-  const barH = "40px";
-  const barW = "460px";
-  const radius = "10px";
-
-  // Troopers use the default #UnitHealthbarContainer (no .minion class).
-  // Heroes also use that selector, so restore .player afterwards with a more-specific rule.
   text = replaceFirstRuleProps(
     text,
     "#UnitHealthbarContainer",
     props([
-      ["height: 150px;", `height: ${barH};`],
-      ["height: 130px;", `height: ${barH};`],
-      ["width: 500px;", `width: ${barW};\n\tui-scale: ${uiScale};`],
-      ["width: 900px;", `width: ${barW};\n\tui-scale: ${uiScale};`],
-      ["max-width: 700px;", `max-width: ${barW};`],
       ["margin-left: 200px;", "margin-left: 0px;"],
       ["margin-bottom: 200px;", "margin-bottom: 0px;"],
     ]),
-  );
-
-  text = injectIntoFirstRule(
-    text,
-    "#UnitHealthbarContainer",
-    `ui-scale: ${uiScale};\n\tmax-width: ${barW};\n\tborder-radius: ${radius};`,
   );
 
   text = replaceFirstRuleProps(
@@ -97,29 +79,7 @@ export function flattenUnitHealthbars(text: string): string {
     text = text.slice(0, insertAt) + heroVanilla + text.slice(insertAt);
   }
 
-  const combined =
-    ".sentry #UnitHealthbarContainer,.minion #UnitHealthbarContainer,.npc #UnitHealthbarContainer,.trooper #UnitHealthbarContainer";
-
-  text = text.replace(".sentry #UnitHealthbarContainer,.minion #UnitHealthbarContainer", combined);
-
-  text = replaceFirstRuleProps(
-    text,
-    combined,
-    props([
-      ["height: 70px;", `height: ${barH};`],
-      ["width: 500px;", `width: ${barW};`],
-      ["ui-scale: 200%;", `ui-scale: ${uiScale};`],
-    ]),
-  );
-
-  return replaceFirstRuleProps(
-    text,
-    ".sentry #UnitHealthbarContainer",
-    props([
-      ["height: 80px;", `height: ${barH};`],
-      ["width: 600px;", `width: ${barW};\n\tui-scale: ${uiScale};`],
-    ]),
-  );
+  return text;
 }
 
 export function revealPlayerBarNumbers(text: string): string {

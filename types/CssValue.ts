@@ -47,4 +47,20 @@ export class CssValue {
   asNumber(): number {
     return Number(this.asSignedPx().replace("px", ""));
   }
+
+  /** `300%` / `300` → 3, `3` → 3, `1` → 1. */
+  asScaleFactor(): number {
+    const text = this.raw.trim().toLowerCase().replaceAll(" ", "");
+    let value = Number.NaN;
+
+    if (text.endsWith("%")) value = Number(text.slice(0, -1)) / 100;
+    else {
+      value = Number(text);
+      if (value > 10) value /= 100;
+    }
+
+    if (!Number.isFinite(value) || value <= 0) return 1;
+
+    return value;
+  }
 }

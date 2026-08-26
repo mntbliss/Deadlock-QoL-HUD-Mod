@@ -46,6 +46,8 @@
   "shield_gap": "4px",
   "inventory_slots_opacity_idle": "40%",
 
+  "minion_scale": "300%",
+
   "minimap_border_radius": "32px",
   "minimap_bg_color": "#0000004D",
   "minimap_scale": "100%"

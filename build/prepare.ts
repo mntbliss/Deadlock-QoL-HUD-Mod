@@ -33,7 +33,6 @@ import {
 import {
   PLAYER_LAYOUT_BASES,
   PLAYER_STYLE_BASES,
-  UNIT_INJECT_STYLES,
   UNIT_LAYOUT_BASES,
   UNIT_STYLE_BASES,
   UNIT_STYLE_NAMES,
@@ -95,7 +94,6 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
   }
 
   const playerOverride = flags.playerHp ? renderTemplate(paths.playerCss, cfg) : "";
-  const unitOverride = flags.minions ? renderTemplate(paths.unitCss, cfg) : "";
   const minimapOverride = flags.minimap ? renderTemplate(paths.minimapCss, cfg) : "";
   const heartOverride = flags.gunHud
     ? heartOverrideCss(paths.heartCss, flags.heartPulse, cfg, {
@@ -162,9 +160,6 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
       text = `${text.trimEnd()}\n\n/* === mntbliss minimap override === */\n${minimapOverride}\n`;
     } else if (UNIT_STYLE_NAMES.has(name)) {
       text = flattenUnitHealthbars(text);
-      text = `${text.trimEnd()}\n\n/* === mntbliss unit HP override === */\n${unitOverride}\n`;
-    } else if (UNIT_INJECT_STYLES.has(name)) {
-      text = `${text.trimEnd()}\n\n/* === mntbliss unit HP override === */\n${unitOverride}\n`;
     } else if (name === "hud.css") {
       if (flags.playerHp) {
         text = flattenPlayerHealthbar(text, cfg);

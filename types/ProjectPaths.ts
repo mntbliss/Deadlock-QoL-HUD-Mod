@@ -46,10 +46,6 @@ export class ProjectPaths {
     return path.join(this.root, "panorama", "styles", "hud_hp_bottom_center.css");
   }
 
-  get unitCss(): string {
-    return path.join(this.root, "panorama", "styles", "unit_hp_top_chunky.css");
-  }
-
   get minimapCss(): string {
     return path.join(this.root, "panorama", "styles", "hud_minimap_rounded.css");
   }

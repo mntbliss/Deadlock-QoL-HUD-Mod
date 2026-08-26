@@ -53,7 +53,7 @@
     var raw = parts.join(" ").replace(/,/g, "");
     var match = raw.match(/-?\d+(?:\.\d+)?/);
 
-    if (!match) return false;
+    if (!match) return true;
 
     return Math.abs(parseFloat(match[0])) < 0.0001;
   }
@@ -119,20 +119,6 @@
       } else {
         child.AddClass("mntbliss_stat_hidden");
         child.RemoveClass("mntbliss_stat_ghost");
-      }
-
-      var bonus = null;
-
-      try {
-        bonus = child.FindChildTraverse("bonusIcon");
-      } catch (_err) {
-        bonus = null;
-      }
-
-      if (valid(bonus)) {
-        bonus.style.visibility = "collapse";
-        bonus.style.width = "0px";
-        bonus.style.height = "0px";
       }
     }
 
