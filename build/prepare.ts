@@ -161,7 +161,7 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
       text = flattenMinimap(text, cfg);
       text = `${text.trimEnd()}\n\n/* === mntbliss minimap override === */\n${minimapOverride}\n`;
     } else if (UNIT_STYLE_NAMES.has(name)) {
-      text = flattenUnitHealthbars(text, cfg);
+      text = flattenUnitHealthbars(text);
       text = `${text.trimEnd()}\n\n/* === mntbliss unit HP override === */\n${unitOverride}\n`;
     } else if (UNIT_INJECT_STYLES.has(name)) {
       text = `${text.trimEnd()}\n\n/* === mntbliss unit HP override === */\n${unitOverride}\n`;

@@ -6,11 +6,11 @@ function props(pairs: Array<[string, string]>): CssReplacement[] {
   return CssReplacement.many(pairs);
 }
 
-export function flattenUnitHealthbars(text: string, cfg: HudConfig): string {
-  const uiScale = cfg.css("minion_ui_scale", "300%").asUiScale();
-  const barH = cfg.get("minion_bar_height", "40px");
-  const barW = cfg.get("minion_bar_width", "460px");
-  const radius = cfg.get("minion_border_radius", "10px");
+export function flattenUnitHealthbars(text: string): string {
+  const uiScale = "300%";
+  const barH = "40px";
+  const barW = "460px";
+  const radius = "10px";
 
   // Troopers use the default #UnitHealthbarContainer (no .minion class).
   // Heroes also use that selector, so restore .player afterwards with a more-specific rule.

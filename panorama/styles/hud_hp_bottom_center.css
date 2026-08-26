@@ -12,8 +12,6 @@
 @define HealthbarTrackColor: #0A0A0A99;
 @define HealthbarBarShadow: 0px 0px 6px 1px #000000F0;
 @define HealthbarFillColor: #e2ffde;
-@define HealthbarFillMidColor: #E8FF5A;
-@define HealthbarFillLowColor: #FF5A5A;
 @define HealthbarDamageColor: #B83A32CC;
 @define HealthbarHealColor: #77DB77CC;
 @define HealthbarNumberOffsetY: -30px;
@@ -204,18 +202,6 @@
 	padding: 0px;
 	box-shadow: none;
 	z-index: 5;
-}
-
-.localPlayerMidHealth #health_bar .ProgressBarLeft,
-.healthMid #health_bar .ProgressBarLeft
-{
-	background-color: HealthbarFillMidColor;
-}
-
-.localPlayerLowHealth #health_bar .ProgressBarLeft,
-.healthLow #health_bar .ProgressBarLeft
-{
-	background-color: HealthbarFillLowColor;
 }
 
 #health_bar .ProgressBarMiddle

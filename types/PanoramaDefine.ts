@@ -14,7 +14,7 @@ export class PanoramaDefine {
 
     const value = new CssValue(raw);
 
-    if (this.name === "MinimapScale" || this.name === "MinionUiScale") return value.asUiScale();
+    if (this.name === "MinimapScale") return value.asUiScale();
     if (this.name === "HeartSize" || this.name === "CrosshairCenterDotSize") return value.asPx();
     if (this.name === "InventorySlotsOpacityIdle") return value.asOpacity();
 
@@ -23,13 +23,6 @@ export class PanoramaDefine {
 
   static all(): PanoramaDefine[] {
     return [
-      new PanoramaDefine("MinionBarWidth", "minion_bar_width"),
-      new PanoramaDefine("MinionBarHeight", "minion_bar_height"),
-      new PanoramaDefine("MinionUiScale", "minion_ui_scale"),
-      new PanoramaDefine("MinionBorderRadius", "minion_border_radius"),
-      new PanoramaDefine("MinionBorderWidth", "minion_border_width"),
-      new PanoramaDefine("MinionBorderColor", "minion_border_color"),
-      new PanoramaDefine("MinionTrackColor", "minion_track_color"),
       new PanoramaDefine("MinimapBorderRadius", "minimap_border_radius"),
       new PanoramaDefine("MinimapBgColor", "minimap_bg_color"),
       new PanoramaDefine("MinimapScale", "minimap_scale"),
@@ -59,8 +52,6 @@ export class PanoramaDefine {
       new PanoramaDefine("HealthbarTrackColor", "track_color"),
       new PanoramaDefine("HealthbarBarShadow", "bar_shadow"),
       new PanoramaDefine("HealthbarFillColor", "fill_color"),
-      new PanoramaDefine("HealthbarFillMidColor", "fill_mid_color"),
-      new PanoramaDefine("HealthbarFillLowColor", "fill_low_color"),
       new PanoramaDefine("HealthbarDamageColor", "damage_color"),
       new PanoramaDefine("HealthbarHealColor", "heal_color"),
       new PanoramaDefine("HealthbarNumberOffsetY", "number_offset_y"),
