@@ -668,6 +668,52 @@ export function flattenSwapCorners(text: string): string {
   );
 }
 
+/**
+ * Valve CoreStats / StatList sit bottom-left (over swapped minimap).
+ * Park them with inventory on the right; shop-open flips back with inventory.
+ */
+export function flattenSwapPlayerStats(text: string): string {
+  text = replaceFirstRuleProps(
+    text,
+    "#HudStatBlock",
+    props([
+      ["horizontal-align: left;", "horizontal-align: right;"],
+      ["margin-left: 20px;", "margin-left: 0px;\n\tmargin-right: 20px;"],
+      ["margin-bottom: 220px;", "margin-bottom: 260px;"],
+    ]),
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".gShopOpen #HudStatBlock",
+    props([["margin-bottom: 250px;", "margin-bottom: 290px;"]]),
+  );
+
+  // Shop: inventory returns left — keep stats with it (override the right align).
+  text = injectIntoFirstRule(
+    text,
+    ".gShopOpen #HudStatBlock",
+    "horizontal-align: left;\n\tmargin-left: 20px;\n\tmargin-right: 0px;",
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    "#StatList",
+    props([
+      ["horizontal-align: left;", "horizontal-align: right;"],
+      ["margin-bottom: 280px;", "margin-bottom: 320px;"],
+    ]),
+  );
+
+  text = injectIntoFirstRule(
+    text,
+    ".gShopOpen #StatList",
+    "horizontal-align: left;",
+  );
+
+  return text;
+}
+
 /** Compact always-on stats strip next to inventory. First-property flatten. */
 export function flattenStatsMonitor(text: string, cfg: HudConfig, swapCorners: boolean): string {
   const bg = cfg.get("stats_monitor_bg_color", "#0A0A0A80");

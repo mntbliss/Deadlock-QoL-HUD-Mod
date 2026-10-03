@@ -15,6 +15,7 @@ import {
   flattenPlayerHealthbar,
   flattenStatsMonitor,
   flattenSwapCorners,
+  flattenSwapPlayerStats,
   heartOverrideCss,
   revealPlayerBarNumbers,
 } from "./patch_css.ts";
@@ -129,11 +130,14 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
 
   if (flags.swapCorners && !styleNames.includes("hud.css")) styleNames.push("hud.css");
 
-  if (flags.statsMonitor) {
+  // Always pack Valve player-stats CSS when swapping corners so CoreStats
+  // move with inventory (otherwise they sit on the left minimap).
+  if (
+    (flags.statsMonitor || flags.swapCorners) &&
+    !styleNames.includes("citadel_hud_active_player_stats.css")
+  ) {
     if (!styleNames.includes("hud.css")) styleNames.push("hud.css");
-    if (!styleNames.includes("citadel_hud_active_player_stats.css")) {
-      styleNames.push("citadel_hud_active_player_stats.css");
-    }
+    styleNames.push("citadel_hud_active_player_stats.css");
   }
 
   for (const name of styleNames) {
@@ -179,8 +183,13 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
         text = `${text.trimEnd()}\n\n/* === mntbliss stats monitor === */\n${statsOverride}\n`;
       }
     } else if (name === "citadel_hud_active_player_stats.css") {
-      text = flattenStatsMonitor(text, cfg, flags.swapCorners);
-      text = `${text.trimEnd()}\n\n/* === mntbliss stats monitor === */\n${statsOverride}\n`;
+      if (flags.statsMonitor) {
+        text = flattenStatsMonitor(text, cfg, flags.swapCorners);
+        text = `${text.trimEnd()}\n\n/* === mntbliss stats monitor === */\n${statsOverride}\n`;
+      } else if (flags.swapCorners) {
+        text = flattenSwapPlayerStats(text);
+        text = `${text.trimEnd()}\n\n/* === mntbliss swap player stats off minimap === */\n`;
+      }
     } else if (name.endsWith("element_gun.css")) {
       if (flags.heart) {
         text = flattenHeartCrosshair(
