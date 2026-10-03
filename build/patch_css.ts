@@ -204,6 +204,18 @@ export function flattenPlayerHealthbar(text: string, cfg: HudConfig): string {
 
   text = injectIntoFirstRule(text, ".healthBacker", "visibility: collapse;\n\topacity: 0;");
 
+  // Keep container regen chip dead — hud_health.xml already shows the bottom "^ 1.5".
+  text = replaceFirstRuleProps(
+    text,
+    ".healthRegenContainer",
+    props([["visibility: collapse;", "visibility: collapse;"]]),
+  );
+  text = injectIntoFirstRule(
+    text,
+    ".healthRegenContainer",
+    "visibility: collapse;\n\topacity: 0;\n\twidth: 0px;\n\theight: 0px;",
+  );
+
   const animStops: Array<[string, string]> = [
     [".healthLow .health_bar_line", "vibrate"],
     [".healthMid .health_bar_line", "vibrate3"],

@@ -74,6 +74,7 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
     flags.statsMonitor && "stats",
     flags.inventory && "inventory",
     flags.swapCorners && "corners",
+    flags.brightSoulOrbs && "souls",
   ].filter(Boolean);
 
   Log.ok("✨", `${cfg.get("mod_name", "HUD mod")} · ${on.join(" · ")}`);

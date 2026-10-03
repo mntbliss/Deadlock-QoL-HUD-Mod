@@ -34,6 +34,9 @@ const STALE = [
   "firerate_under_ammo_color",
   "use_move_speed_below_ammo",
   "move_speed_below_ammo_color",
+  "soul_orb_halo_scale",
+  "soul_orb_halo_min",
+  "soul_orb_halo_max",
 ];
 
 const DEFAULTS: Record<string, string> = {
@@ -46,6 +49,8 @@ const DEFAULTS: Record<string, string> = {
   use_custom_hit_animation: "true",
   use_custom_hit_headshot_animation: "true",
   use_clear_inventory: "true",
+  use_bright_soul_orbs: "true",
+  soul_orb_halo_size: "14",
   use_stats_monitor: "true",
   crosshair_color: "#FFFFFF",
   reload_crosshair_color: "#FF5A5A",
@@ -159,6 +164,13 @@ export class HudConfig {
     if (typeof raw === "boolean") return raw;
 
     return ["1", "true", "yes", "on"].includes(String(raw).trim().toLowerCase());
+  }
+
+  /** Positive number from config.json (falls back if missing/invalid). */
+  number(key: string, fallback: number): number {
+    const n = Number(String(this.values[key] ?? fallback).trim());
+
+    return Number.isFinite(n) ? n : fallback;
   }
 
   applyInventoryLayout(moveLevel: boolean): void {

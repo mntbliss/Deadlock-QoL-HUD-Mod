@@ -4,7 +4,10 @@ import { fileURLToPath } from "node:url";
 
 import { assertCompiled, compileFiles, packVpk } from "./build/compile.ts";
 import { prepareSources } from "./build/prepare.ts";
+import { compileBrightSoulOrbs } from "./build/patch_souls.ts";
 import { BuildError } from "./types/BuildError.ts";
+import { FeatureFlags } from "./types/FeatureFlags.ts";
+import { HudConfig } from "./types/HudConfig.ts";
 import { Log } from "./types/Log.ts";
 import { ProjectPaths } from "./types/ProjectPaths.ts";
 
@@ -35,8 +38,13 @@ function main(): void {
 
   compileFiles(paths, inputs);
 
+  const cfg = HudConfig.load(paths);
+  const flags = new FeatureFlags(cfg);
+
+  if (flags.brightSoulOrbs) compileBrightSoulOrbs(paths, cfg);
+
   const found = walk(paths.gameOut).filter((p) =>
-    [".vcss_c", ".vxml_c", ".vjs_c", ".vdata_c", ".vsvg_c"].includes(path.extname(p)),
+    [".vcss_c", ".vxml_c", ".vjs_c", ".vdata_c", ".vsvg_c", ".vpcf_c"].includes(path.extname(p)),
   );
 
   if (!found.length) {

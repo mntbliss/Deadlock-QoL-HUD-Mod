@@ -11,6 +11,7 @@ export class FeatureFlags {
   readonly statsMonitor: boolean;
   readonly inventory: boolean;
   readonly swapCorners: boolean;
+  readonly brightSoulOrbs: boolean;
 
   constructor(cfg: HudConfig) {
     this.playerHp = cfg.isEnabled("use_character_hp_bar");
@@ -22,6 +23,7 @@ export class FeatureFlags {
     this.statsMonitor = cfg.isEnabled("use_stats_monitor");
     this.inventory = cfg.isEnabled("use_clear_inventory");
     this.swapCorners = cfg.isEnabled("swap_minimap_inventory", false);
+    this.brightSoulOrbs = cfg.isEnabled("use_bright_soul_orbs", true);
   }
 
   get any(): boolean {
@@ -33,7 +35,8 @@ export class FeatureFlags {
       this.customHeadshot ||
       this.statsMonitor ||
       this.inventory ||
-      this.swapCorners
+      this.swapCorners ||
+      this.brightSoulOrbs
     );
   }
 

@@ -9,6 +9,7 @@ const SUFFIX: Record<string, string> = {
   ".js": ".vjs_c",
   ".vdata": ".vdata_c",
   ".svg": ".vsvg_c",
+  ".vpcf": ".vpcf_c",
 };
 
 /** One source file staged for resourcecompiler. */

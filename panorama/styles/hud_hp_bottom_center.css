@@ -504,16 +504,16 @@
 	margin-top: 0px;
 }
 
-.healthRegenContainer
+/* Duplicate of hud_health.xml .regen_container — was showing as ">> 1.50/s" under the bar. */
+.healthRegenContainer,
+.healthRegenLabel,
+.healtRegenArrows
 {
-	horizontal-align: center;
-	vertical-align: bottom;
-	margin-top: 0px;
-	margin-bottom: 44px;
-	margin-left: 168px;
-	ignore-parent-flow: true;
-	visibility: visible;
-	flow-children: right;
+	visibility: collapse;
+	opacity: 0;
+	width: 0px;
+	height: 0px;
+	margin: 0px;
 }
 
 .shieldNumbersContainer,

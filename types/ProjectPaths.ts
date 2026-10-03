@@ -15,15 +15,7 @@ export class ProjectPaths {
   ) {}
 
   get extract(): string {
-    const vendored = path.join(this.root, "assets", "panorama");
-
-    if (fs.existsSync(vendored)) return vendored;
-
-    const nextToGame = path.join(this.deadlock, "_hud_extract", "panorama");
-
-    if (fs.existsSync(nextToGame)) return nextToGame;
-
-    return vendored;
+    return path.join(this.root, "assets", "panorama");
   }
 
   get configJson(): string {

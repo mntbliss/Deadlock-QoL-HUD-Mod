@@ -10,6 +10,8 @@
   "use_custom_hit_headshot_animation": true,
   "use_clear_inventory": true,
   "use_stats_monitor": false,
+  "use_bright_soul_orbs": true,
+  "soul_orb_halo_size": 20,
   "swap_minimap_inventory": false,
 
   "crosshair_color": "#eee7f3",
