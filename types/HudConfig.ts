@@ -5,11 +5,13 @@ import { CssValue } from "./CssValue.ts";
 import type { ProjectPaths } from "./ProjectPaths.ts";
 
 const ALIASES: Record<string, string> = {
-  minion_use_panorama_bars: "use_minion_panorama_bars",
   relload_crosshair_color: "reload_crosshair_color",
 };
 
 const STALE = [
+  "use_minion_panorama_bars",
+  "minion_use_panorama_bars",
+  "minion_scale",
   "minion_bar_scale",
   "minion_bar_width",
   "minion_bar_height",
@@ -38,7 +40,6 @@ const DEFAULTS: Record<string, string> = {
   author: "mntbliss",
   mod_name: "mntbliss QoL HUD",
   use_character_hp_bar: "true",
-  use_minion_panorama_bars: "true",
   use_minimap_style: "true",
   use_heart_crosshair: "true",
   use_heart_pulse_low_hp_crosshair: "true",
@@ -76,7 +77,6 @@ const DEFAULTS: Record<string, string> = {
   buffs_offset_y: "0px",
   swap_minimap_inventory: "false",
   inventory_slots_opacity_idle: "40%",
-  minion_scale: "300%",
   minimap_border_radius: "32px",
   minimap_bg_color: "#0000004D",
   minimap_scale: "100%",
@@ -90,7 +90,6 @@ export const HIDDEN_CONFIG_KEYS = new Set([
   "author",
   "mod_name",
   "use_character_hp_bar",
-  "use_minion_panorama_bars",
   "use_minimap_style",
   "use_heart_crosshair",
   "use_heart_pulse_low_hp_crosshair",

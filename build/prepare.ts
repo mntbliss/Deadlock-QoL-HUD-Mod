@@ -15,28 +15,19 @@ import {
   flattenPlayerHealthbar,
   flattenStatsMonitor,
   flattenSwapCorners,
-  flattenUnitHealthbars,
   heartOverrideCss,
   revealPlayerBarNumbers,
 } from "./patch_css.ts";
-import { prepareNpcUnits } from "./patch_vdata.ts";
 import {
-  hoistHpNumbers,
   hoistShieldNumbers,
   injectHeartIntoHud,
   injectHeartsIntoGun,
+  injectHpNumbers,
   injectLowhpListener,
-  injectMinionHpLabel,
   injectStatsMonitorScript,
   injectUnsecuredSoulsChip,
 } from "./patch_xml.ts";
-import {
-  PLAYER_LAYOUT_BASES,
-  PLAYER_STYLE_BASES,
-  UNIT_LAYOUT_BASES,
-  UNIT_STYLE_BASES,
-  UNIT_STYLE_NAMES,
-} from "./vanilla.ts";
+import { PLAYER_LAYOUT_BASES, PLAYER_STYLE_BASES } from "./vanilla.ts";
 
 function writeNl(file: string, text: string): void {
   fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -67,7 +58,6 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
   fs.mkdirSync(path.join(paths.content, "panorama", "layout"), { recursive: true });
   fs.mkdirSync(path.join(paths.content, "panorama", "images"), { recursive: true });
   fs.mkdirSync(path.join(paths.content, "panorama", "scripts"), { recursive: true });
-  fs.mkdirSync(path.join(paths.content, "scripts"), { recursive: true });
   fs.mkdirSync(paths.gameOut, { recursive: true });
 
   const cfg = HudConfig.load(paths);
@@ -77,7 +67,6 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
 
   const on = [
     flags.playerHp && "hp",
-    flags.minions && "minions",
     flags.minimap && "minimap",
     flags.heart && "heart",
     flags.customHit && "hit",
@@ -120,8 +109,6 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
     styleNames.push("hud_minimap.css");
   }
 
-  if (flags.minions) styleNames.push(...UNIT_STYLE_BASES);
-
   if (flags.gunHud) {
     if (!styleNames.includes("hud.css")) styleNames.push("hud.css");
     styleNames.push("ability_hud_elements/element_gun.css");
@@ -158,8 +145,6 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
     if (name === "hud_minimap.css") {
       text = flattenMinimap(text, cfg);
       text = `${text.trimEnd()}\n\n/* === mntbliss minimap override === */\n${minimapOverride}\n`;
-    } else if (UNIT_STYLE_NAMES.has(name)) {
-      text = flattenUnitHealthbars(text);
     } else if (name === "hud.css") {
       if (flags.playerHp) {
         text = flattenPlayerHealthbar(text, cfg);
@@ -230,7 +215,6 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
   const layoutNames: string[] = [];
 
   if (flags.playerHp) layoutNames.push(...PLAYER_LAYOUT_BASES);
-  if (flags.minions) layoutNames.push(...UNIT_LAYOUT_BASES);
 
   for (const name of layoutNames) {
     const src = path.join(paths.extract, "layout", name);
@@ -242,22 +226,15 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
 
     let text = stripViewerNoise(fs.readFileSync(src, "utf8"));
 
-    const isUnitLayout = UNIT_LAYOUT_BASES.includes(name);
+    text = text.replaceAll('vertical="true"', 'vertical="false"');
+    text = text.replaceAll('class="WindowRoot"', 'class="WindowRoot mntbliss_flat"');
 
-    if (!isUnitLayout) {
-      text = text.replaceAll('vertical="true"', 'vertical="false"');
-      text = text.replaceAll('class="WindowRoot"', 'class="WindowRoot mntbliss_flat"');
-    }
-
-    if (flags.playerHp && (name === "hud_health.xml" || name === "hud_health_single_bar.xml")) {
-      text = hoistHpNumbers(text);
-    }
-
-    if (flags.playerHp && (name === "hud_health.xml" || name === "hud_health_stacked.xml")) {
+    if (name === "hud_health.xml") {
+      text = injectHpNumbers(text);
+      text = hoistShieldNumbers(text);
+    } else if (name === "hud_health_stacked.xml") {
       text = hoistShieldNumbers(text);
     }
-
-    if (flags.minions) text = injectMinionHpLabel(text);
 
     const dest = path.join(paths.content, "panorama", "layout", name);
 
@@ -345,8 +322,6 @@ export function prepareSources(paths: ProjectPaths): CompileInput[] {
       inputs.push(new CompileInput(hudDest));
     }
   }
-
-  prepareNpcUnits(paths, inputs, cfg);
 
   if (flags.playerHp || flags.minimap || flags.gunHud || flags.inventory) {
     const images = path.join(paths.root, "panorama", "images");

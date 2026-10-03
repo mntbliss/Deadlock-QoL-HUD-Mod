@@ -36,7 +36,6 @@ Toggles live in [`config.json`](config.json). Turn a feature off there if you on
 | Minimap | Rounded square, faded edges, dotted glass back | <img src="docs/previews/minimap.gif" alt="" width="200" /> |
 | Dota Corners | `swap_minimap_inventory`: minimap left, items right (Dota players welcome). Shop (`B`) still uses vanilla left | <img src="docs/previews/minimap.gif" alt="" width="200" /> |
 | Crosshair | Heart outline. Pulses on low HP, cracks while reloading. Hit markers: `use_custom_hit_animation` / `use_custom_hit_headshot_animation` | <img src="docs/previews/heart-crosshair.gif" alt="" width="200" /> |
-| Minions | Chunky top-center bars for troopers. Heroes keep vanilla dotted pips | <img src="docs/previews/minion-bars.gif" alt="" width="200" /> |
 | Inventory | Idle dotted slots, sliders hidden. Shop (`B`) puts vanilla layout back | <img src="docs/previews/inventory.gif" alt="" width="200" /> |
 
 
@@ -52,7 +51,6 @@ Toggles live in [`config.json`](config.json). Turn a feature off there if you on
 - [Finding Deadlock and the CSDK](#finding-deadlock-and-the-csdk)
 - [Patching vanilla CSS in place](#patching-vanilla-css-in-place)
 - [Patching XML layouts](#patching-xml-layouts)
-- [Clearing trooper particle bars](#clearing-trooper-particle-bars)
 - [Compiling originals into Valve file extensions](#compiling-originals-into-valve-file-extensions)
 - [Packing the addon VPK](#packing-the-addon-vpk)
 - [Turning the mod on in the game](#turning-the-mod-on-in-the-game)
@@ -87,8 +85,7 @@ A committed `paths.json` from another machine is ignored when those folders do n
 
 Vanilla HUD copies used by the build live in this repo:
 
-- [`assets/panorama/`](assets/panorama/) — the 25 CSS/XML files we patch (not the full HUD extract)
-- [`assets/scripts/npc_units.vdata`](assets/scripts/npc_units.vdata) — trooper health-bar particles
+- [`assets/panorama/`](assets/panorama/) — the CSS/XML files we patch (not the full HUD extract)
 
 ### Patching vanilla CSS in place
 
@@ -97,7 +94,6 @@ Compiled Panorama often keeps the **first** definition of a property. Appending 
 [`build/patch_css.ts`](build/patch_css.ts) rewrites the extracted vanilla rules, then appends our files:
 
 - [`hud_hp_bottom_center.css`](panorama/styles/hud_hp_bottom_center.css)
-- [`unit_hp_top_chunky.css`](panorama/styles/unit_hp_top_chunky.css)
 - [`hud_minimap_rounded.css`](panorama/styles/hud_minimap_rounded.css)
 - [`hud_heart_crosshair.css`](panorama/styles/hud_heart_crosshair.css)
 - [`hud_clear_inventory.css`](panorama/styles/hud_clear_inventory.css)
@@ -108,13 +104,9 @@ Helpers: [`build/css_edit.ts`](build/css_edit.ts).
 
 [`build/patch_xml.ts`](build/patch_xml.ts) changes extracted layouts so bindings still work:
 
-- HP numbers moved out of the clipped bar (`hud_health.xml`)
+- Shield numbers hoisted off the clipped bar (`hud_health.xml`)
 - Souls chip on `CitadelHudSoulAPContainer` (`hud_gold_and_ap_container.xml`)
 - Heart images in `hud.xml` / `element_gun.xml`
-
-### Clearing trooper particle bars
-
-[`build/patch_vdata.ts`](build/patch_vdata.ts) blanks `m_HealthBarParticle` on troopers in `npc_units.vdata` so they use the Panorama overlay.
 
 ### Compiling originals into Valve file extensions
 
@@ -124,7 +116,6 @@ Helpers: [`build/css_edit.ts`](build/css_edit.ts).
 | --- | --- |
 | `.css` | `.vcss_c` |
 | `.xml` | `.vxml_c` |
-| `.vdata` | `.vdata_c` |
 | `.svg` | `.vsvg_c` |
 
 Deadlock never loads raw `.css`.
@@ -173,4 +164,4 @@ bun run build
 
 Each rebuild overwrites [`compiled/pak01_dir.vpk`](compiled/pak01_dir.vpk) and `game/citadel/addons/pak01_dir.vpk`.
 
-Disable with [`disable_mod.bat`](disable_mod.bat). After a game patch, re-decompile those same files into [`assets/panorama/`](assets/panorama/) and [`assets/scripts/`](assets/scripts/) before rebuilding.
+Disable with [`disable_mod.bat`](disable_mod.bat). After a game patch, re-decompile those same files into [`assets/panorama/`](assets/panorama/) before rebuilding.

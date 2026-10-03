@@ -1,33 +1,29 @@
 import { BuildError } from "../types/BuildError.ts";
 import { Log } from "../types/Log.ts";
 
-export function hoistHpNumbers(text: string): string {
-  if (text.includes('class="hp_numbers_row"')) return text;
+/** Valve emptied #health_bar in hud_health.xml; numbers still bind only inside that ProgressBar. */
+export function injectHpNumbers(text: string): string {
+  if (text.includes('id="current_health"')) return text;
 
-  const pattern =
-    /<Panel class="progress_bar_numbers">\s*<Panel class="bar_num_col_right">\s*<Label id="current_health"[^>]*>\s*<Label id="max_health"[^>]*>\s*<\/Panel>\s*<\/Panel>\s*/s;
-  const next = text.replace(pattern, "");
+  const emptyBar =
+    /<ProgressBarWithMiddle id="health_bar" class="large_progress_bar"([^>]*?)\s*\/>/;
 
-  if (next === text) {
-    Log.warn("⚠️", "could not hoist HP numbers");
+  if (!emptyBar.test(text)) {
+    Log.warn("⚠️", "could not inject HP numbers");
     return text;
   }
 
-  text = next;
-
-  const row =
-    '<Panel class="hp_numbers_row">\n' +
-    '\t\t\t\t<Label id="current_health" class="progress_bar_current" text="{i:health}" />\n' +
-    '\t\t\t\t<Label id="max_health" text="/{i:maxHealth}" />\n' +
-    "\t\t\t</Panel>\n" +
-    '\t\t\t<Panel class="health_bar_border">';
-
-  if (!text.includes('<Panel class="health_bar_border">')) {
-    Log.warn("⚠️", "health_bar_border missing after hoist");
-    return text;
-  }
-
-  return text.replace('<Panel class="health_bar_border">', row);
+  return text.replace(
+    emptyBar,
+    `<ProgressBarWithMiddle id="health_bar" class="large_progress_bar"$1>
+				<Panel class="progress_bar_numbers">
+					<Panel class="bar_num_col_right">
+						<Label id="current_health" class="progress_bar_current" text="{i:health}" />
+						<Label id="max_health" text="/{i:maxHealth}" />
+					</Panel>
+				</Panel>
+			</ProgressBarWithMiddle>`,
+  );
 }
 
 export function hoistShieldNumbers(text: string): string {
@@ -220,25 +216,3 @@ export function injectLowhpListener(text: string): string {
   );
 }
 
-export function injectMinionHpLabel(text: string): string {
-  if (text.includes("mntbliss_hp_label")) return text;
-
-  const hpLabel =
-    '<Label id="mntbliss_hp_label" class="mntbliss_hp_label" text="{i:health}/{i:maxHealth}" />';
-
-  if (text.includes('<Panel id="UnitHealthbarsContainer" />')) {
-    return text.replace(
-      '<Panel id="UnitHealthbarsContainer" />',
-      `${hpLabel}\n\t\t\t\t<Panel id="UnitHealthbarsContainer" />`,
-    );
-  }
-
-  if (text.includes('<Panel id="InfoHealthContainer">')) {
-    return text.replace(
-      '<Panel id="InfoHealthContainer">',
-      `<Panel id="InfoHealthContainer">\n\t\t\t\t${hpLabel}`,
-    );
-  }
-
-  return text;
-}

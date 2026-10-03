@@ -26,14 +26,6 @@ export class ProjectPaths {
     return vendored;
   }
 
-  get npcUnitsSrc(): string {
-    const vendored = path.join(this.root, "assets", "scripts", "npc_units.vdata");
-
-    if (fs.existsSync(vendored)) return vendored;
-
-    return path.join(this.deadlock, "_extract_decompiled_scripts", "scripts", "npc_units.vdata");
-  }
-
   get configJson(): string {
     return path.join(this.root, "config.json");
   }

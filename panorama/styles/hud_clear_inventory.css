@@ -82,7 +82,9 @@
 	width: 400px;
 	height: fit-children;
 	margin-left: 20px;
-	margin-bottom: 180px;
+	/* Keep shop gold/level near vanilla (~150). Game-UI souls/level use ignore-parent-flow
+	   anchors; shop restores flow layout and must not inherit the taller in-game offsets. */
+	margin-bottom: 140px;
 }
 
 #BarGraphContainer

@@ -145,7 +145,6 @@
 	background-color: HealthbarTrackColor;
 	padding: 0px;
 	overflow: noclip;
-	world-blur: ingameHudBlur;
 	box-shadow: HealthbarBarShadow;
 	brightness: 1;
 }
@@ -159,7 +158,8 @@
 	margin: 0px;
 	padding: 0px;
 	border-radius: HealthbarBorderRadius;
-	overflow: clip;
+	/* noclip: current/max sit above the bar (margin-top negative). clip hid them. */
+	overflow: noclip;
 	box-shadow: none;
 	brightness: 1;
 }
@@ -177,8 +177,17 @@
 	width: 100%;
 	height: 100%;
 	padding: 0px;
-	overflow: clip;
+	overflow: noclip;
 	box-shadow: none;
+}
+
+/* Keep the fill itself clipped to the capsule; numbers are siblings above. */
+#health_bar .ProgressBarLeft,
+#health_bar .ProgressBarRight,
+#health_bar .ProgressBarMiddle
+{
+	overflow: clip;
+	border-radius: HealthbarBorderRadius;
 }
 
 #health_bar .ProgressBarLeft,
@@ -321,66 +330,28 @@
 	visibility: collapse;
 }
 
-/* HP / max sit ABOVE the bar. Labels must stay inside the ProgressBar
-   or {i:health} goes empty. Parents use overflow: noclip so they are not clipped. */
+/* Old #health_bar {i:health} labels no longer bind after the HUD update — hide them.
+   Live text is .currentHealthLabel / .totalHealthLabel on the health container. */
 #health_bar .progress_bar_numbers,
 .health_bar_border .progress_bar_numbers,
 .progress_bar_numbers
 {
-	visibility: visible;
-	opacity: 1;
-	ignore-parent-flow: true;
-	width: 100%;
-	height: 32px;
-	horizontal-align: center;
-	vertical-align: top;
-	margin-top: HealthbarNumberOffsetY;
-	transform: none;
-	flow-children: none;
-	z-index: 80;
-	overflow: noclip;
+	visibility: collapse;
+	opacity: 0;
 }
 
 .bar_num_col_right,
 .bar_num_col_left
 {
-	width: 100%;
-	height: 32px;
-	horizontal-align: center;
-	vertical-align: center;
-	flow-children: right;
-	overflow: noclip;
+	visibility: collapse;
 }
 
 #health_bar #current_health,
-#health_bar .progress_bar_current
-{
-	font-family: numericOracle;
-	font-size: HealthbarNumberSize;
-	font-weight: bold;
-	color: HealthbarNumberColor;
-	text-shadow: 0px 0px 4px 3.0 #000000EE;
-	vertical-align: center;
-	horizontal-align: center;
-	padding-left: 0px;
-	margin: 0px;
-	visibility: visible;
-	opacity: 1;
-	overflow: noclip;
-}
-
+#health_bar .progress_bar_current,
 #health_bar #max_health
 {
-	font-family: numericSans;
-	font-size: 16px;
-	color: HealthbarMaxNumberColor;
-	margin-left: 4px;
-	margin-right: 0px;
-	margin-top: 4px;
-	vertical-align: center;
-	visibility: visible;
-	opacity: 1;
-	overflow: noclip;
+	visibility: collapse;
+	opacity: 0;
 }
 
 #mntbliss_shield_numbers,
@@ -449,7 +420,7 @@
 #HealthRegenAndTotal
 {
 	width: 100%;
-	height: 36px;
+	height: 100%;
 	horizontal-align: center;
 	vertical-align: top;
 	margin-top: 0px;
@@ -463,11 +434,21 @@
 	overflow: noclip;
 }
 
+/* In-capsule current / max (Valve bindings: {i:r:current_health} / {i:r:total_health}). */
 .healthContainer
 {
+	ignore-parent-flow: true;
 	horizontal-align: center;
 	vertical-align: top;
-	visibility: collapse;
+	margin-top: 64px;
+	margin-right: 0px;
+	width: fit-children;
+	height: HealthbarHeight;
+	flow-children: right;
+	visibility: visible;
+	opacity: 1;
+	overflow: noclip;
+	z-index: 200;
 }
 
 .healthBacker
@@ -475,12 +456,52 @@
 	visibility: collapse;
 	opacity: 0;
 	background-image: none;
+	width: 0px;
+	height: 0px;
 }
 
-.currentHealthLabel,
+.currentHealthLabel
+{
+	visibility: visible;
+	opacity: 1;
+	vertical-align: center;
+	horizontal-align: center;
+	font-family: numericOracle;
+	font-size: 16px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-shadow: 0px 0px 0px 3.0 #000000FF;
+	margin: 0px;
+	padding: 0px;
+	letter-spacing: 0px;
+	text-overflow: shrink;
+	max-width: 200px;
+}
+
 .totalHealthLabel
 {
-	visibility: collapse;
+	visibility: visible;
+	opacity: 1;
+	vertical-align: center;
+	horizontal-align: left;
+	font-family: numericSans;
+	font-size: 12px;
+	font-weight: semi-bold;
+	color: #FFFFFFCC;
+	text-shadow: 0px 0px 0px 2.5 #000000FF;
+	margin: 0px;
+	margin-left: 4px;
+	margin-top: 1px;
+	padding: 0px;
+}
+
+.localPlayerLowHealth .currentHealthLabel,
+.healthLow .currentHealthLabel
+{
+	font-size: 16px;
+	color: #FF5656;
+	text-shadow: 0px 0px 0px 3.0 #000000FF;
+	margin-top: 0px;
 }
 
 .healthRegenContainer

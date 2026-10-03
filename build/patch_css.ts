@@ -6,82 +6,6 @@ function props(pairs: Array<[string, string]>): CssReplacement[] {
   return CssReplacement.many(pairs);
 }
 
-export function flattenUnitHealthbars(text: string): string {
-  text = replaceFirstRuleProps(
-    text,
-    "#UnitHealthbarContainer",
-    props([
-      ["margin-left: 200px;", "margin-left: 0px;"],
-      ["margin-bottom: 200px;", "margin-bottom: 0px;"],
-    ]),
-  );
-
-  text = replaceFirstRuleProps(
-    text,
-    "#UnitHealthbarsContainer",
-    props([["pre-transform-rotate2d: -70deg;", "pre-transform-rotate2d: 0deg;"]]),
-  );
-
-  text = replaceFirstRuleProps(
-    text,
-    ".verticalHealthbars .WindowRoot",
-    props([
-      [
-        "transform: rotateZ(-70deg) translateY(170px) translateX(-500px);",
-        "transform: none;",
-      ],
-      ["transform: rotateZ(-90deg);", "transform: none;"],
-    ]),
-  );
-
-  const heroVanilla = `
-.player #UnitHealthbarsContainer
-{
-	pre-transform-rotate2d: -70deg;
-	pre-transform-scale2d: 1.1;
-	horizontal-align: middle;
-	vertical-align: middle;
-	overflow: noclip;
-	flow-children: none;
-	margin-right: 0px;
-}
-
-.player #UnitHealthbarContainer
-{
-	height: 150px;
-	width: 500px;
-	max-width: 700px;
-	ui-scale: 100%;
-	pre-transform-scale2d: 1.0;
-	margin-left: 200px;
-	margin-bottom: 200px;
-	vertical-align: middle;
-	horizontal-align: middle;
-	overflow: noclip;
-	border-radius: 0px;
-}
-
-.verticalHealthbars.player .WindowRoot,
-.player.verticalHealthbars .WindowRoot
-{
-	transform: rotateZ(-70deg) translateY(170px) translateX(-500px);
-	height: 100%;
-	padding: 20px;
-	width: 80%;
-}
-`;
-
-  const defineHits = [...text.matchAll(/@define [^\n]+\n/g)];
-  const last = defineHits[defineHits.length - 1];
-
-  if (last?.index !== undefined) {
-    const insertAt = last.index + last[0].length;
-    text = text.slice(0, insertAt) + heroVanilla + text.slice(insertAt);
-  }
-
-  return text;
-}
-
 export function revealPlayerBarNumbers(text: string): string {
   return replaceFirstRuleProps(
     text,
@@ -97,6 +21,12 @@ export function revealPlayerBarNumbers(text: string): string {
 export function flattenPlayerHealthbar(text: string, cfg: HudConfig): string {
   const barW = cfg.get("bar_width", "440px");
   const barH = cfg.get("bar_height", "22px");
+  const hpBottom = cfg.get("margin_bottom", "120px");
+  // Keep in-bar text readable inside the capsule (config number_size is often too tall).
+  const numSize = cfg.css("number_size", "16px").asNumber() > 18
+    ? "16px"
+    : cfg.get("number_size", "16px");
+  const maxNumSize = "12px";
 
   text = text.replaceAll("margin: 4px 0px 1px 1px;", "margin: 0px;");
 
@@ -171,8 +101,108 @@ export function flattenPlayerHealthbar(text: string, cfg: HudConfig): string {
       ["width: 250px;", "width: 580px;"],
       ["height: 380px;", "height: 168px;"],
       ["overflow: clip;", "overflow: noclip;"],
+      // New HUD still ships left-anchored offsets; first-property wins, so clear here
+      // (appended hud_hp_bottom_center cannot override them).
+      ["horizontal-align: left;", "horizontal-align: center;"],
+      ["margin-left: 300px;", "margin-left: 0px;"],
+      ["margin-right: 1290px;", "margin-right: 0px;"],
+      // Must set real bottom here — first-property wins over appended HealthbarMarginBottom.
+      ["margin-bottom: 30px;", `margin-bottom: ${hpBottom};`],
+      ["margin-bottom: 20px;", `margin-bottom: ${hpBottom};`],
     ]),
   );
+
+  text = injectIntoFirstRule(text, "#health_and_abilities_container", "ui-scale: 100%;");
+
+  // Second vanilla block only sets ui-scale: 120% — kill it so HP isn't enlarged vs souls/level.
+  text = text.replace(
+    /(#health_and_abilities_container\s*\{\s*ui-scale:\s*)120%(;)/,
+    "$1100%$2",
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".AspectRatio21x9 #health_and_abilities_container",
+    props([["margin-right: 1210px;", "margin-right: 0px;"]]),
+  );
+  text = replaceFirstRuleProps(
+    text,
+    ".AspectRatio16x10 #health_and_abilities_container",
+    props([
+      ["margin-right: 1030px;", "margin-right: 0px;"],
+      ["margin-left: 0px;", "margin-left: 0px;"],
+    ]),
+  );
+
+  // Live HP text is currentHealthLabel/totalHealthLabel on the container (not #health_bar).
+  // First-property wins — patch the vanilla rules so in-bar white+outline text actually applies.
+  text = replaceFirstRuleProps(
+    text,
+    ".healthContainer",
+    props([
+      ["horizontal-align: right;", "horizontal-align: center;"],
+      ["margin-top: 100px;", "margin-top: 64px;"],
+      ["width: 100px;", "width: fit-children;"],
+      ["height: 65px;", `height: ${barH};`],
+      ["margin-right: 15px;", "margin-right: 0px;"],
+      ["flow-children: down;", "flow-children: right;"],
+    ]),
+  );
+  text = injectIntoFirstRule(
+    text,
+    ".healthContainer",
+    "visibility: visible;\n\tignore-parent-flow: true;\n\tvertical-align: top;\n\toverflow: noclip;\n\tz-index: 200;",
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".currentHealthLabel",
+    props([
+      ["color: offWhite;", "color: #FFFFFF;"],
+      ["font-size: 32px;", `font-size: ${numSize};`],
+      ["margin-left: 5px;", "margin-left: 0px;"],
+      ["padding-left: 2px;", "padding-left: 0px;"],
+      ["margin-bottom: -12px;", "margin-bottom: 0px;"],
+      ["margin-top: 6px;", "margin-top: 0px;"],
+      ["text-shadow: 0px 0px 0px 5.0 offBlack;", "text-shadow: 0px 0px 0px 3.0 #000000FF;"],
+    ]),
+  );
+  text = injectIntoFirstRule(
+    text,
+    ".currentHealthLabel",
+    "visibility: visible;\n\tvertical-align: center;\n\thorizontal-align: center;",
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".totalHealthLabel",
+    props([
+      ["font-size: 14px;", `font-size: ${maxNumSize};`],
+      ["horizontal-align: right;", "horizontal-align: left;"],
+      ["margin-right: 12px;", "margin-right: 0px;"],
+      ["margin-left: 0px;", "margin-left: 4px;"],
+      ["margin-top: 0px;", "margin-top: 1px;"],
+      ["color: offWhite;", "color: #FFFFFFCC;"],
+      ["opacity: 0.2;", "opacity: 1.0;"],
+      ["transform: rotateZ(-3deg);", "transform: none;"],
+    ]),
+  );
+  text = injectIntoFirstRule(
+    text,
+    ".totalHealthLabel",
+    "visibility: visible;\n\tvertical-align: center;\n\tmargin-left: 4px;\n\ttext-shadow: 0px 0px 0px 2.5 #000000FF;",
+  );
+
+  text = replaceFirstRuleProps(
+    text,
+    ".localPlayerLowHealth .currentHealthLabel,.healthLow .currentHealthLabel",
+    props([
+      ["font-size: 36px;", `font-size: ${numSize};`],
+      ["margin-top: 0px;", "margin-top: 0px;"],
+    ]),
+  );
+
+  text = injectIntoFirstRule(text, ".healthBacker", "visibility: collapse;\n\topacity: 0;");
 
   const animStops: Array<[string, string]> = [
     [".healthLow .health_bar_line", "vibrate"],
@@ -307,18 +337,30 @@ export function flattenClearInventory(text: string, cfg: HudConfig, moveLevel: b
     "#gold_and_ap_container",
     props([
       ["horizontal-align: left;", "horizontal-align: center;"],
+      // Vanilla drifted (26/142 → 20/140); match both so anchors stay screen-centered.
       ["margin-left: 26px;", "margin-left: 0px;"],
+      ["margin-left: 20px;", "margin-left: 0px;"],
       ["margin-bottom: 142px;", "margin-bottom: 0px;"],
+      ["margin-bottom: 140px;", "margin-bottom: 0px;"],
       ["width: 400px;", "width: 100%;"],
     ]),
   );
 
   text = injectIntoFirstRule(text, "#gold_and_ap_container", "height: 100%;\n\toverflow: noclip;");
 
+  text = replaceFirstRuleProps(
+    text,
+    "#gold_and_ap_container.gShopOpen",
+    props([
+      ["margin-bottom: 150px;", "margin-bottom: 140px;"],
+      ["margin-bottom: 180px;", "margin-bottom: 140px;"],
+    ]),
+  );
+
   text = injectIntoFirstRule(
     text,
     "#gold_and_ap_container.gShopOpen",
-    "width: 400px;\n\thorizontal-align: left;\n\theight: fit-children;",
+    "width: 400px;\n\thorizontal-align: left;\n\theight: fit-children;\n\tmargin-bottom: 140px;",
   );
 
   text = injectIntoFirstRule(text, "#hudGoldContainer", "visibility: collapse;");
@@ -430,7 +472,13 @@ export function flattenHeartCrosshair(text: string, hideVanillaCrit = true, dotS
     props([["opacity: 0.99;", "opacity: 0;"]]),
   );
 
-  text = injectIntoFirstRule(text, ".gun_crosshair", "visibility: collapse;\n\twidth: 0px;\n\theight: 0px;");
+  // Opacity-only hide — visibility:collapse / 0×0 both drop .gun_crosshair from layout.
+  // #gun_data then shrinks and ammo/reload sit left of the heart (heart is on the 500×500 root).
+  text = replaceFirstRuleProps(
+    text,
+    ".gun_crosshair",
+    props([["opacity: 1;", "opacity: 0;"]]),
+  );
 
   text = injectIntoFirstRule(text, ".crosshair__pip", "visibility: collapse;\n\topacity: 0;\n\tbackground-image: none;");
   text = injectIntoFirstRule(text, ".crosshair__arc", "visibility: collapse;\n\topacity: 0;");
@@ -653,7 +701,7 @@ export function flattenStatsMonitor(text: string, cfg: HudConfig, swapCorners: b
   text = injectIntoFirstRule(
     text,
     "CitadelHudActivePlayerStats",
-    `height: fit-children;\n\tmax-width: 380px;\n\tpadding: 0px;\n\tbackground-color: ${bg};\n\tborder-radius: 12px;\n\toverflow: noclip;\n\tworld-blur: ingameHudBlur;`,
+    `height: fit-children;\n\tmax-width: 380px;\n\tpadding: 0px;\n\tbackground-color: ${bg};\n\tborder-radius: 12px;\n\toverflow: noclip;`,
   );
 
   text = replaceFirstRuleProps(

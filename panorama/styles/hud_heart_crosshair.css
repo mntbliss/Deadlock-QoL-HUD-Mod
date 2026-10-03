@@ -114,8 +114,14 @@
 	background-color: transparent;
 }
 
+/* Keep .gun_crosshair / #GunGrosshair in layout (500×500) so #gun_data stays screen-centered. */
 .gun_crosshair,
-#GunGrosshair,
+#GunGrosshair
+{
+	opacity: 0;
+	background-image: none;
+}
+
 .crosshair__pip,
 .crosshair__pipborder,
 .crosshair__arc,
@@ -146,6 +152,14 @@
 	width: 0px;
 	height: 0px;
 	background-image: none;
+}
+
+#gun_data
+{
+	width: 500px;
+	height: 500px;
+	horizontal-align: center;
+	vertical-align: center;
 }
 
 #Dot,
